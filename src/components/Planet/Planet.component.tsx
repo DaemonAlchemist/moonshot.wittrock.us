@@ -8,14 +8,16 @@ const borderWidth = 5;
 
 const getStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition):React.CSSProperties => {
     const position = getPosition(planet, t);
+    const size = `${planet.attributes.radius * 2 - 2 * borderWidth}px`;
+    const toCenter = planet.attributes.radius - borderWidth;
     const data = {
         border: `solid ${borderWidth}px #${planet.view.borderColor}`,
         background: `#${planet.view.color}`,
         borderRadius: `${planet.attributes.radius}px`,
-        height: `calc(${planet.attributes.radius * 2}px - 2*${borderWidth}px)`,
-        left: `${position.x - planet.attributes.radius + borderWidth + offset.x}px`,
-        top: `${position.y - planet.attributes.radius + borderWidth + offset.y}px`,
-        width: `calc(${planet.attributes.radius * 2}px - 2*${borderWidth}px)`,
+        height: size,
+        left: `${position.x - toCenter + offset.x}px`,
+        top: `${position.y - toCenter + offset.y}px`,
+        width: size,
     };
 
     return data;
@@ -24,7 +26,7 @@ const getStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition):Re
 const getDotStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition):React.CSSProperties => {
     const position = getPosition(planet, t);
     const data = {
-        background: `#000000`,
+        background: `#ffffff`,
         height: `2px`,
         left: `${position.x - 1 + offset.x}px`,
         top: `${position.y - 1 + offset.y}px`,

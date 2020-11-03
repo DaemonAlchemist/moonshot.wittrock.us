@@ -42,7 +42,7 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
             const a = 75 * (i + 1);
             const p:ViewableCelestialObject = {
                 id,
-                attributes: {mass, radius: random.float(1,2) * mass, name: id},
+                attributes: {mass, radius: random.float(3, 10) * mass, name: id},
                 orbit: {parent: sun, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
                 position: {x: 0, y: 0},
                 view: {minViewSize: 2, borderColor: "6666ff", color: "aaaaff"}
