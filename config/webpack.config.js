@@ -111,6 +111,11 @@ module.exports = function (webpackEnv) {
       },
       {
         loader: require.resolve('less-loader'),
+        options: {
+          lessOptions: {
+            javascriptEnabled: true,
+          }
+        }
       },
       {
         // Options for PostCSS as we reference these options twice
