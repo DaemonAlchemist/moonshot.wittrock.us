@@ -7,7 +7,7 @@ import { moonshotReducer } from './util/redux';
 export const App = () => 
   <ReduxContainer
     reducers={moonshotReducer}
-    useLogger={true}
+    useLogger={false}
     middleware={[]}
     initialState={{}}
   >

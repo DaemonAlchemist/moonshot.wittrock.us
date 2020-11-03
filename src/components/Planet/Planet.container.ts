@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import { PlanetComponent } from './Planet.component';
 import {IPlanetStateProps, IPlanetProps, IPlanetDispatchProps, PlanetProps} from "./Planet.d";
+import { timer } from '../../util/redux';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IPlanetProps):IPlanetStateProps => ({
-
+    time: timer.get(state).time,
 });
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions

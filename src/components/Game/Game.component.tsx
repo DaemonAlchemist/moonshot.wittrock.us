@@ -11,7 +11,16 @@ export const GameComponent = (props:GameProps) => {
     const [level, setLevel] = React.useState(1);
     const changeLevel = (newLevel:number) => () => {setLevel(newLevel);}
 
+    React.useEffect(() => {
+        props.resetLevel(level);
+    }, [level]);
+
     React.useEffect(start, [start]);
+
+    React.useEffect(() => {
+        console.log(`Tick: ${t}`);
+        props.tick(t);
+    }, [t]);
 
     return <Layout>
         <Layout.Sider>
@@ -26,9 +35,9 @@ export const GameComponent = (props:GameProps) => {
             <hr />
         </Layout.Sider>
         <Layout.Content className="viewports">
-            <Viewport className="start-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} time={t} />
-            <Viewport className="main-viewport" center={{x: 0, y: 0}} zoom={1} time={t} />
-            <Viewport className="end-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} time={t} />
+            <Viewport className="start-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} />
+            <Viewport className="main-viewport" center={{x: 0, y: 0}} zoom={1} />
+            <Viewport className="end-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} />
         </Layout.Content>
     </Layout>;
 }

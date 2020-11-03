@@ -69,6 +69,7 @@ export declare type ViewableCelestialObject = ICelestialBody & IViewable;
 export declare interface ISolverOptions {
     maxSteps?: number;
     maxDelta?: number;
-    dX?: number;
+    min?: number;
+    max?: number;
     initialValue?: number;
 }

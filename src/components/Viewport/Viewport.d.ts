@@ -1,16 +1,15 @@
-import { IPosition } from "../../util/sim";
+import { IPosition, ViewableCelestialObject } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
 export declare interface IViewportProps {
     className?:string;
     center:IPosition;
     zoom:number;
-    time:number;
 }
 
 // What gets returned from the first connect function (mapStateToProps)
 export declare interface IViewportStateProps {
-
+    planets: ViewableCelestialObject[];
 }
 
 // What gets returned from the second connect function (mapDispatchToProps)

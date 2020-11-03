@@ -1,11 +1,11 @@
-import { ViewableCelestialObject, ITimeable, IOffsetable } from "../../util/sim";
+import { IOffsetable, ViewableCelestialObject } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
-export declare type IPlanetProps = ViewableCelestialObject & IZoomable & ITimeable & IOffsetable;
+export declare type IPlanetProps = ViewableCelestialObject & IZoomable & IOffsetable;
 
 // What gets returned from the first connect function (mapStateToProps)
 export declare interface IPlanetStateProps {
-
+    time: number;
 }
 
 // What gets returned from the second connect function (mapDispatchToProps)
