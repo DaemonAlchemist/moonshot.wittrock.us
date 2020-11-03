@@ -1,9 +1,9 @@
-import { CelestialBody, IPosition, Satellite, ISatellite, CentralBody, ISolverOptions } from "./sim";
+import { ICelestialBody, IPosition, ISolverOptions, ISatellite } from "./sim";
 
 const G = 1.0;
 const GPrime = 2*Math.PI / Math.sqrt(G);
 
-export const period = (p:Satellite):number => GPrime * Math.sqrt(p.orbit.a * p.orbit.a * p.orbit.a / p.orbit.parent.attributes.mass);
+export const period = (p:ISatellite):number => GPrime * Math.sqrt(p.orbit.a * p.orbit.a * p.orbit.a / p.orbit.parent.attributes.mass);
 
 // Solve an equation y = f(x) for x given a target y value via successive approximations
 export const solve = (target:number, f:(n:number) => number, options:ISolverOptions) => {
@@ -26,12 +26,12 @@ export const solve = (target:number, f:(n:number) => number, options:ISolverOpti
 }
 
 // Source: https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion#Position_as_a_function_of_time
-// TODO:  Memoize this based on planet object id and t
-export const getPosition = (planet:CelestialBody, t:number):IPosition => {
-    if(typeof (planet as ISatellite).orbit === "undefined") {
-        return (planet as CentralBody).position;
+// TODO:  Memoize this based on planet object id and t if performance becomes an issue
+export const getPosition = (planet:ICelestialBody, t:number):IPosition => {
+    if(typeof planet.orbit === "undefined") {
+        return planet.position;
     } else {
-        const s = planet as Satellite;
+        const s = planet as ISatellite;
 
         const p = period(s);
         const n = 2*Math.PI / p;

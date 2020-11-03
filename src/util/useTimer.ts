@@ -4,31 +4,29 @@ export const useTimer = (interval:number, speed:number):[number, () => void, () 
     const [time, setTime] = React.useState(0);
     const [timer, setTimer] = React.useState<number | undefined>();
 
-    const start = () => {
+    const stop = React.useCallback(() => {
+        console.log('Stopping timer');
+        clearInterval(timer);
+    }, [timer]);
+
+    const start = React.useCallback(() => {
         console.log('Starting timer');
-        stop();
         setTimer(window.setInterval(() => {
             setTime(t => t + speed);
         }, interval));
-    };
+    }, [interval, speed]);
 
-    const stop = () => {
-        console.log('Stopping timer');
-        clearInterval(timer);
-        setTimer(0);
-    }
-
-    const reset = () => {
+    const reset = React.useCallback(() => {
         console.log('Resetting timer');
-        stop();
+        clearInterval(timer);
         setTime(0);
-    }
+    }, [timer]);
 
     React.useEffect(() => {
         return () => {
             clearInterval(timer);
         }
-    }, []);
+    }, [timer]);
 
     return [time, start, stop, reset];
 }

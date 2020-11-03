@@ -1,0 +1,37 @@
+@viewportSize: 400px;
+@viewportOffset: 16px;
+
+.ant-layout-sider {
+    text-align: center;
+    h1 {
+        color: #ffffff;
+        text-align: center;
+    }
+    .ant-btn-group {
+        display: inline-block;
+    }
+}
+
+.viewports {
+    position: relative;
+    .main-viewport {
+        width: 100%;
+        height: 100vh;
+        border: solid 2px #ffffff;
+    }
+    .inset-viewport {
+        width: @viewportSize;
+        height: @viewportSize;
+        position: absolute;
+        border: solid 2px #ffffff;
+        z-index: 9;
+    }
+    .start-viewport {
+        top: @viewportOffset;
+        left: @viewportOffset;
+    }
+    .end-viewport {
+        bottom: @viewportOffset;
+        right: @viewportOffset;
+    }
+}

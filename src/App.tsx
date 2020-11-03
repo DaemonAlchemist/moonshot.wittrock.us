@@ -1,16 +1,15 @@
 import React from 'react';
+import { ReduxContainer } from 'simple-redux-container';
 import './App.less';
-import { Viewport } from './components/Viewport';
-import {ReduxContainer} from 'simple-redux-container';
+import { Game } from './components/Game';
+import { moonshotReducer } from './util/redux';
 
 export const App = () => 
   <ReduxContainer
-    reducers={{}}
+    reducers={moonshotReducer}
     useLogger={true}
     middleware={[]}
     initialState={{}}
   >
-    <div className="App">
-      <Viewport />
-    </div>
+    <Game />
   </ReduxContainer>;

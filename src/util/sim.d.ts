@@ -4,6 +4,18 @@ export declare interface IPosition {
     y:number;
 }
 
+export declare interface ITimer {
+    time: number;
+    isRunning: boolean;
+}
+
+export declare interface IDeltaV {
+    id: string;
+    deltaV: number;
+    time: number;
+    angle: number;
+}
+
 export declare interface IBody {
     name: string;
     mass: number;
@@ -25,14 +37,13 @@ export declare interface IOrbit {
 }
 
 export declare interface ICelestialBody {
+    id: string;
     attributes: IBody;
-}
-
-export declare interface ICentralBody {
     position: IPosition;
+    orbit?: IOrbit;
 }
 
-export declare interface ISatellite {
+export declare interface ISatellite extends ICelestialBody {
     orbit: IOrbit;
 }
 
@@ -48,11 +59,11 @@ export declare interface ITimeable {
     time: number;
 }
 
-export declare type CentralBody = ICentralBody & ICelestialBody;
-export declare type Satellite = ISatellite & ICelestialBody;
-export declare type CelestialBody = CentralBody | Satellite;
+export declare interface IOffsetable {
+    offset:IPosition;
+}
 
-export declare type ViewableCelestialObject = CelestialBody & IViewable;
+export declare type ViewableCelestialObject = ICelestialBody & IViewable;
 
 // -----
 export declare interface ISolverOptions {
