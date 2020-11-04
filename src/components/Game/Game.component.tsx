@@ -1,4 +1,4 @@
-import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
+import { CaretLeftOutlined, CaretRightOutlined, UndoOutlined } from "@ant-design/icons";
 import { Button, Layout } from 'antd';
 import * as React from 'react';
 import { useTimer } from '../../util/useTimer';
@@ -7,7 +7,7 @@ import { GameProps } from "./Game.d";
 import './Game.less';
 
 export const GameComponent = (props:GameProps) => {
-    const [t, start] = useTimer(10, 10);
+    const [t, start] = useTimer(10, 1);
     const [level, setLevel] = React.useState(1);
     const changeLevel = (newLevel:number) => () => {setLevel(newLevel);}
 
@@ -18,7 +18,6 @@ export const GameComponent = (props:GameProps) => {
     React.useEffect(start, [start]);
 
     React.useEffect(() => {
-        console.log(`Tick: ${t}`);
         props.tick(t);
     }, [t]);
 
@@ -31,6 +30,12 @@ export const GameComponent = (props:GameProps) => {
                 <Button disabled={level === 1} onClick={changeLevel(level - 1)}><CaretLeftOutlined /></Button>
                 <Button>{level}</Button>
                 <Button onClick={changeLevel(level + 1)}><CaretRightOutlined /></Button>
+            </Button.Group>
+            <hr />
+            <h1>Time</h1>
+            <Button.Group>
+                <Button><UndoOutlined /></Button>
+                <Button><CaretRightOutlined /></Button>
             </Button.Group>
             <hr />
         </Layout.Sider>

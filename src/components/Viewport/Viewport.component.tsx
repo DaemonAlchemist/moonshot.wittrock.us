@@ -1,4 +1,3 @@
-import { Slider } from 'antd';
 import * as React from 'react';
 import { IPosition } from '../../util/sim';
 import { Planet } from '../Planet';
@@ -40,8 +39,24 @@ export const ViewportComponent = (props:ViewportProps) => {
         }
     }
 
+    const [zoom, setZoom] = React.useState(props.zoom);
+    const zoomSpeed = 1.2;
+    const onZoom = (e:React.WheelEvent) => {
+        const up = e.deltaY > 0;
+        const mul = up ? 1/zoomSpeed : zoomSpeed;
+        setZoom(z => z * mul);
+        setCenter(c => ({
+            x: c.x * mul,
+            y: c.y * mul,
+        }));
+        setOffset(o => ({
+            x: (o.x - size.x/2) / mul + size.x/2,
+            y: (o.y - size.y/2) / mul + size.y/2,
+        }));
+    }
+
     return <div className={`viewport-container ${props.className}`}>
-        <div className="slider"><Slider /></div>
+        <div className="zoom">Zoom: {zoom.toFixed(1)}</div>
         <div
             ref={ref}
             className="viewport"
@@ -49,9 +64,10 @@ export const ViewportComponent = (props:ViewportProps) => {
             onMouseUp={stopDragging}
             onMouseLeave={stopDragging}
             onMouseMove={drag}
+            onWheel={onZoom}
         >
             {props.planets.map(planet =>
-                <Planet key={planet.id} {...planet} zoom={props.zoom} offset={offset} />
+                <Planet key={planet.id} {...planet} zoom={zoom} offset={offset} />
             )}
         </div>
     </div>;

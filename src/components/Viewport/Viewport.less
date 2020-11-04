@@ -1,9 +1,11 @@
 .viewport-container {
     background: #333333;
-    > .slider {
-        margin-top: 0;
-        width: 50%;
-        margin: auto;
+    .zoom {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        color: #ffffff;
+        z-index: 99;
     }
     .viewport {
         overflow: hidden;
@@ -11,6 +13,6 @@
         position: relative;
         margin-top: 0;
         width: 100%;
-        height: calc(100% - 36px);
+        height: 100%;
     }
 }
