@@ -3,7 +3,6 @@ import { getPosition } from '../../util/orbit';
 import { IPosition, ViewableCelestialObject } from '../../util/sim';
 import { PlanetProps } from "./Planet.d";
 import './Planet.less';
-import {range} from 'ts-functional';
 
 const getContainerStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition, zoom:number):React.CSSProperties => {
     const absPosition = getPosition(planet, t);

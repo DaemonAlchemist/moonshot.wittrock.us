@@ -1,11 +1,12 @@
+import random from 'random';
 import { connect } from 'react-redux';
+import seedrandom from 'seedrandom';
+import { memoize } from 'ts-functional';
 import { planet, timer } from '../../util/redux';
 import { ViewableCelestialObject } from '../../util/sim';
 import { GameComponent } from './Game.component';
 import { GameProps, IGameDispatchProps, IGameProps, IGameStateProps } from "./Game.d";
-import random from 'random';
-import seedrandom from 'seedrandom';
-import { getNewSun, getNewPlanet } from './Game.helpers';
+import { getNewPlanet, getNewSun } from './Game.helpers';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IGameProps):IGameStateProps => ({
@@ -14,7 +15,7 @@ export const mapStateToProps = (state:any, props:IGameProps):IGameStateProps => 
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions
 export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatchProps => ({
-    resetLevel: (level:number) => {
+    resetLevel:memoize(() => (level:number) => {
         // Clear and reset the old level
         console.log("Clearing old level");
         dispatch(planet.clear());
@@ -36,8 +37,11 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         for(let i=0; i<count; i++) {
             dispatch(planet.addMultiple(getNewPlanet(sun, i)));
         }
+    }, {})(),
+    reset: () => {
+        dispatch(timer.update({time: 0}));
     },
-    tick: (time:number) => {
+    updateTime: (time:number) => {
         dispatch(timer.update({time}));
     }
 });
@@ -47,6 +51,9 @@ export const mergeProps = (state:IGameStateProps, dispatch:IGameDispatchProps, p
     ...state,
     ...dispatch,
     ...props,
+    tick: (dt:number) => {
+        dispatch.updateTime(state.timer.time + dt);
+    }
 });
 
 export const Game = connect<IGameStateProps, IGameDispatchProps, IGameProps, GameProps, any>(

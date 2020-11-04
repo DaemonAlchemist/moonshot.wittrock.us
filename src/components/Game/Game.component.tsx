@@ -1,5 +1,5 @@
-import { CaretLeftOutlined, CaretRightOutlined, UndoOutlined } from "@ant-design/icons";
-import { Button, Layout } from 'antd';
+import { LeftCircleTwoTone, PauseCircleTwoTone, PlayCircleTwoTone, RightCircleTwoTone } from "@ant-design/icons";
+import { Layout } from 'antd';
 import * as React from 'react';
 import { useTimer } from '../../util/useTimer';
 import { Viewport } from '../Viewport';
@@ -7,36 +7,36 @@ import { GameProps } from "./Game.d";
 import './Game.less';
 
 export const GameComponent = (props:GameProps) => {
-    const [t, start] = useTimer(10, 1);
+    const {resetLevel, tick} = props;
+
+    const [isRunning, start, stop] = useTimer({
+        interval: 10,
+        speed: 1,
+        onTick: tick,
+        isRunning: true,
+    });
     const [level, setLevel] = React.useState(1);
     const changeLevel = (newLevel:number) => () => {setLevel(newLevel);}
 
     React.useEffect(() => {
-        props.resetLevel(level);
-    }, [level]);
+        resetLevel(level);
+    }, [resetLevel, level]);
 
     React.useEffect(start, [start]);
-
-    React.useEffect(() => {
-        props.tick(t);
-    }, [t]);
 
     return <Layout>
         <Layout.Sider>
             <h1>MoonShot</h1>
             <hr />
             <h1>Level</h1>
-            <Button.Group>
-                <Button disabled={level === 1} onClick={changeLevel(level - 1)}><CaretLeftOutlined /></Button>
-                <Button>{level}</Button>
-                <Button onClick={changeLevel(level + 1)}><CaretRightOutlined /></Button>
-            </Button.Group>
+            <LeftCircleTwoTone onClick={level > 1 ? changeLevel(level - 1) : undefined} />
+            <span className="curLevel">{level}</span>
+            <RightCircleTwoTone onClick={changeLevel(level + 1)} />
             <hr />
             <h1>Time</h1>
-            <Button.Group>
-                <Button><UndoOutlined /></Button>
-                <Button><CaretRightOutlined /></Button>
-            </Button.Group>
+            <LeftCircleTwoTone onClick={props.reset}/>
+            {isRunning && <PauseCircleTwoTone onClick={stop} />}
+            {!isRunning && <PlayCircleTwoTone onClick={start} />}
             <hr />
         </Layout.Sider>
         <Layout.Content className="viewports">

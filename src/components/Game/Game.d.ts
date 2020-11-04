@@ -13,12 +13,13 @@ export declare interface IGameStateProps {
 // What gets returned from the second connect function (mapDispatchToProps)
 export declare interface IGameDispatchProps {
     resetLevel: (level:number) => void;
-    tick: (time:number) => void;
+    reset: () => void;
+    updateTime: (t:number) => void;
 }
 
 // What gets added in the third connect function (mergeProps)
 export declare interface IGameMergeProps {
-
+    tick: (dt:number) => void;
 }
 
 // The props that finally get passed to the component

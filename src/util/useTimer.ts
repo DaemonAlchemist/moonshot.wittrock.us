@@ -1,32 +1,37 @@
 import * as React from 'react';
 
-export const useTimer = (interval:number, speed:number):[number, () => void, () => void, () => void] => {
-    const [time, setTime] = React.useState(0);
-    const [timer, setTimer] = React.useState<number | undefined>();
+export declare interface IUseTimerOptions {
+    interval: number;
+    speed: number;
+    onTick: (dt:number) => void;
+    isRunning: boolean;
+}
+
+export const useTimer = (options:IUseTimerOptions):[boolean, () => void, () => void] => {
+    const {interval, speed, onTick} = options;
+    
+    const [isRunning, setIsRunning] = React.useState(options.isRunning);
 
     const stop = React.useCallback(() => {
-        console.log('Stopping timer');
-        clearInterval(timer);
-    }, [timer]);
+        setIsRunning(false);
+    }, []);
 
     const start = React.useCallback(() => {
-        console.log('Starting timer');
-        setTimer(window.setInterval(() => {
-            setTime(t => t + speed);
-        }, interval));
-    }, [interval, speed]);
+        setIsRunning(true);
+    }, []);
 
-    const reset = React.useCallback(() => {
-        console.log('Resetting timer');
-        clearInterval(timer);
-        setTime(0);
-    }, [timer]);
+    const tick = React.useCallback(() => {
+        if(isRunning) {
+            onTick(speed);
+        }
+    }, [isRunning, onTick, speed]);
 
     React.useEffect(() => {
+        const timer = window.setInterval(tick, interval);
         return () => {
             clearInterval(timer);
         }
-    }, [timer]);
+    }, [interval, tick]);
 
-    return [time, start, stop, reset];
+    return [isRunning, start, stop];
 }
