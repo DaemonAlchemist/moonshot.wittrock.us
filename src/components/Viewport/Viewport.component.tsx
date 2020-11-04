@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IPosition } from '../../util/sim';
 import { Planet } from '../Planet';
+import { Ship } from '../Ship';
 import { ViewportProps } from "./Viewport.d";
 import './Viewport.less';
 
@@ -66,6 +67,7 @@ export const ViewportComponent = (props:ViewportProps) => {
             onMouseMove={drag}
             onWheel={onZoom}
         >
+            <Ship zoom={zoom} offset={offset} />
             {props.planets.map(planet =>
                 <Planet key={planet.id} {...planet} zoom={zoom} offset={offset} />
             )}

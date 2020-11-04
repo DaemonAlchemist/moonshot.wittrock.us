@@ -10,7 +10,7 @@ export const GameComponent = (props:GameProps) => {
     const {resetLevel, tick} = props;
 
     const [isRunning, start, stop] = useTimer({
-        interval: 10,
+        interval: 50,
         speed: 1,
         onTick: tick,
         isRunning: true,

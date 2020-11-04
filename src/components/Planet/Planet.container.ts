@@ -1,7 +1,9 @@
 import { connect } from 'react-redux';
+import { getPosition } from '../../util/orbit';
+import { planet, timer } from '../../util/redux';
+import { ViewableCelestialObject } from '../../util/sim';
 import { PlanetComponent } from './Planet.component';
-import {IPlanetStateProps, IPlanetProps, IPlanetDispatchProps, PlanetProps} from "./Planet.d";
-import { timer } from '../../util/redux';
+import { IPlanetDispatchProps, IPlanetProps, IPlanetStateProps, PlanetProps } from "./Planet.d";
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IPlanetProps):IPlanetStateProps => ({
@@ -10,7 +12,17 @@ export const mapStateToProps = (state:any, props:IPlanetProps):IPlanetStateProps
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions
 export const mapDispatchToProps = (dispatch:any, props:IPlanetProps):IPlanetDispatchProps => ({
-
+    updatePosition: (time:number) => {
+        if(!!props) {
+            const newPosition = getPosition(props, time);
+            if(newPosition.x !== props.position.x || newPosition.y !== props.position.y) {
+                dispatch(planet.update({
+                    ...props,
+                    position: newPosition,
+                }));
+            }
+        }
+    }
 });
 
 // The mergeProps function:  Use this to define handlers and dispatchers that require access to state props

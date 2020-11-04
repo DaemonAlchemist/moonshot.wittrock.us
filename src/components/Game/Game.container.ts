@@ -2,7 +2,7 @@ import random from 'random';
 import { connect } from 'react-redux';
 import seedrandom from 'seedrandom';
 import { memoize } from 'ts-functional';
-import { planet, timer } from '../../util/redux';
+import { planet, timer, ship } from '../../util/redux';
 import { ViewableCelestialObject } from '../../util/sim';
 import { GameComponent } from './Game.component';
 import { GameProps, IGameDispatchProps, IGameProps, IGameStateProps } from "./Game.d";
@@ -19,7 +19,10 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         // Clear and reset the old level
         console.log("Clearing old level");
         dispatch(planet.clear());
-        dispatch(timer.update({time: 0, isRunning: true}));
+        dispatch(timer.update({time: 0}));
+
+        // List all bodies in the system
+        const bodies:ViewableCelestialObject[] = [];
 
         // Seed the random number generator with the level number
         random.use(seedrandom(`${level}`));
@@ -27,6 +30,7 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         // Create the sun
         console.log("Creating sun");
         const sun:ViewableCelestialObject = getNewSun();
+        bodies.push(sun);
         console.log(sun);
         dispatch(planet.add(sun));
 
@@ -35,8 +39,19 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         console.log(`Planet count: ${count}`);
 
         for(let i=0; i<count; i++) {
-            dispatch(planet.addMultiple(getNewPlanet(sun, i)));
+            const newPlanets = getNewPlanet(sun, i);
+            bodies.concat(newPlanets);
+            dispatch(planet.addMultiple(newPlanets));
         }
+
+        // TODO: Choose a starting body
+
+        // TODO: Choose an ending body
+
+        // TODO: Set the initial ship position and velocity
+        dispatch(ship.update({position: {x: 0, y: 0}, velocity: {x: 1, y: 0}}));
+
+        // TODO: clear the deltaV's
     }, {})(),
     reset: () => {
         dispatch(timer.update({time: 0}));

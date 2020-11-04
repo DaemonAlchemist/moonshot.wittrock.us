@@ -1,5 +1,5 @@
 import { Entity, entity, IEntityDefinition, ISingletonDefinition, Singleton, singleton, theReducer } from 'the-reducer';
-import { IDeltaV, ITimer, ViewableCelestialObject } from './sim';
+import { IDeltaV, ITimer, ViewableCelestialObject, IShip } from './sim';
 
 // --------------------------- //
 
@@ -29,13 +29,20 @@ export const deltaV:Entity<IDeltaV> = entity<IDeltaV>(deltaVDef);
 const timerDef:ISingletonDefinition<ITimer, {}> = {
     module: "moonshot",
     entity: "timer",
-    default: {time: 0, isRunning: false},
+    default: {time: 0},
 }
 export const timer:Singleton<ITimer, {}> = singleton<ITimer>(timerDef);
 
 // --------------------------- //
 
+const shipDef:ISingletonDefinition<IShip, {}> = {
+    module: "moonshot",
+    entity: "ship",
+    default: {position:{x: 0, y:0}, velocity: {x: 0, y:0}}
+};
+export const ship:Singleton<IShip, {}> = singleton<IShip>(shipDef);
+
 export const moonshotReducer = {
     theReducerEntities: theReducer.entity(planet, deltaV),
-    theReducerSingletons: theReducer.singleton(timer),
+    theReducerSingletons: theReducer.singleton(timer, ship),
 }

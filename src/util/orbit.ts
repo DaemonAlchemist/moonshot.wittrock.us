@@ -5,6 +5,15 @@ const GPrime = 2*Math.PI / Math.sqrt(G);
 
 export const period = (p:ISatellite):number => GPrime * Math.sqrt(p.orbit.a * p.orbit.a * p.orbit.a / p.orbit.parent.attributes.mass);
 
+export const abs2scr = (position:IPosition, offset:IPosition, zoom:number):IPosition => {
+    const zoomCenter:IPosition = {x: offset.x / zoom, y: offset.y / zoom};
+    const scrPos:IPosition = {x: position.x + zoomCenter.x, y: position.y + zoomCenter.y};
+    scrPos.x = scrPos.x * zoom;
+    scrPos.y = scrPos.y * zoom;
+
+    return scrPos;
+}
+
 // Solve an equation y = f(x) for x given a target y value via successive approximations
 export const solve = (f:(n:number) => number, options:ISolverOptions) => {
     const maxSteps = options.maxSteps || 50;
