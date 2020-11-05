@@ -43,9 +43,9 @@ export const GameComponent = (props:GameProps) => {
             <hr />
         </Layout.Sider>
         <Layout.Content className="viewports">
-            <Viewport className="start-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
-            <Viewport className="main-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
-            <Viewport className="end-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
+            <Viewport name="Start" className="start-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
+            <Viewport name="System overview" className="main-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
+            <Viewport name="Target" className="end-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
         </Layout.Content>
     </Layout>;
 }

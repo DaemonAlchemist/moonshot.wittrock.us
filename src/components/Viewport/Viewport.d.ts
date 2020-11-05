@@ -6,6 +6,7 @@ export declare interface IViewportProps {
     center:IPosition;
     zoom:number;
     reset:boolean;
+    name: string;
 }
 
 // What gets returned from the first connect function (mapStateToProps)

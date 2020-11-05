@@ -65,9 +65,12 @@ export const ViewportComponent = (props:ViewportProps) => {
     }, [props.reset]);
 
     return <div className={`viewport-container ${props.className}`}>
-        <div className="zoom">
+        <div className="viewport-zoom">
             {!!selectedPlanet ? `${selectedPlanet} - ` : ""} Zoom: {zoom.toFixed(1)}
-            </div>
+        </div>
+        <div className="viewport-name">
+            {props.name}
+        </div>
         <div
             ref={ref}
             className="viewport"
