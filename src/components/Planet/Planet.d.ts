@@ -11,6 +11,7 @@ export declare interface IPlanetStateProps {
 // What gets returned from the second connect function (mapDispatchToProps)
 export declare interface IPlanetDispatchProps {
     updatePosition: (time:number) => void;
+    onClick?:(planetId:string) => void;
 }
 
 // What gets added in the third connect function (mergeProps)

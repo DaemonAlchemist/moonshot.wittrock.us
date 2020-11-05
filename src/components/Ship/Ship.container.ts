@@ -3,6 +3,7 @@ import { ShipComponent } from './Ship.component';
 import {IShipStateProps, IShipProps, IShipDispatchProps, ShipProps} from "./Ship.d";
 import { ship, timer, planet } from '../../util/redux';
 import { IShip, IPosition, ViewableCelestialObject } from '../../util/sim';
+import { G } from '../../util/orbit';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IShipProps):IShipStateProps => ({
@@ -13,7 +14,7 @@ export const mapStateToProps = (state:any, props:IShipProps):IShipStateProps => 
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions
 export const mapDispatchToProps = (dispatch:any, props:IShipProps):IShipDispatchProps => ({
-    update: (s:IShip) => {
+    update: (s:Partial<IShip>) => {
         dispatch(ship.update(s));
     }
 });
@@ -31,9 +32,19 @@ export const mergeProps = (state:IShipStateProps, dispatch:IShipDispatchProps, p
         }
 
         // Add the gravitational forces from the planets
-        const force = state.planets.reduce((force:IPosition, p:ViewableCelestialObject):IPosition => {
-            // TODO: Add force from planets to velocity
-            return force;
+        const force = state.planets.reduce((totalForce:IPosition, p:ViewableCelestialObject):IPosition => {
+            // Add force from planets to velocity
+            const dir:IPosition = {
+                x: p.position.x - state.ship.position.x,
+                y: p.position.y - state.ship.position.y,
+            };
+            const d = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
+
+            const f = G * p.attributes.mass / (d*d);
+            return {
+                x: totalForce.x + f * dir.x / d,
+                y: totalForce.y + f * dir.y / d,
+            }
         }, {x: 0, y: 0});
 
         // Update velocity based on current forces

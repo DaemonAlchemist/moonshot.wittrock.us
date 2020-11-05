@@ -4,6 +4,7 @@ import { Planet } from '../Planet';
 import { Ship } from '../Ship';
 import { ViewportProps } from "./Viewport.d";
 import './Viewport.less';
+import { abs2scr } from '../../util/orbit';
 
 export const ViewportComponent = (props:ViewportProps) => {
     const [offset, setOffset] = React.useState<IPosition>({x: 0, y: 0});
@@ -21,21 +22,14 @@ export const ViewportComponent = (props:ViewportProps) => {
         }
     }, [ref, size.x, size.y]);
 
-    React.useEffect(() => {
-        setOffset({
-            x: size.x / 2 - center.x,
-            y: size.y / 2 - center.y,
-        })
-    }, [size, center]);
-
     const [dragging, setDragging] = React.useState(false);
     const startDragging = () => {setDragging(true);}
     const stopDragging = () => {setDragging(false);}
     const drag = (e:React.MouseEvent) => {
         if(dragging) {
             setCenter({
-                x: center.x - e.movementX,
-                y: center.y - e.movementY,
+                x: center.x - e.movementX / zoom,
+                y: center.y - e.movementY / zoom,
             });
         }
     }
@@ -46,18 +40,34 @@ export const ViewportComponent = (props:ViewportProps) => {
         const up = e.deltaY > 0;
         const mul = up ? 1/zoomSpeed : zoomSpeed;
         setZoom(z => z * mul);
-        setCenter(c => ({
-            x: c.x * mul,
-            y: c.y * mul,
-        }));
-        setOffset(o => ({
-            x: (o.x - size.x/2) / mul + size.x/2,
-            y: (o.y - size.y/2) / mul + size.y/2,
-        }));
     }
 
+    React.useEffect(() => {
+        setOffset({
+            x: size.x / 2 - center.x * zoom,
+            y: size.y / 2 - center.y * zoom,
+        })
+    }, [size, center, zoom]);
+
+    const [selectedPlanet, setSelectedPlanet] = React.useState("");
+    const updateSelectedPlanet = (id:string) => {
+        setSelectedPlanet(id === selectedPlanet ? "" : id);
+    }
+    const selectedPlanetCenter = !!selectedPlanet ? props.planets.filter((p => p.id === selectedPlanet))[0].position : null;
+    if(selectedPlanetCenter) {
+        if(selectedPlanetCenter.x !== center.x || selectedPlanetCenter.y !== center.y) {setCenter(selectedPlanetCenter);}
+    }
+
+    React.useEffect(() => {
+        setSelectedPlanet("");
+        setZoom(1);
+        setCenter(props.center);
+    }, [props.reset]);
+
     return <div className={`viewport-container ${props.className}`}>
-        <div className="zoom">Zoom: {zoom.toFixed(1)}</div>
+        <div className="zoom">
+            {!!selectedPlanet ? `${selectedPlanet} - ` : ""} Zoom: {zoom.toFixed(1)}
+            </div>
         <div
             ref={ref}
             className="viewport"
@@ -69,7 +79,7 @@ export const ViewportComponent = (props:ViewportProps) => {
         >
             <Ship zoom={zoom} offset={offset} />
             {props.planets.map(planet =>
-                <Planet key={planet.id} {...planet} zoom={zoom} offset={offset} />
+                <Planet key={planet.id} {...planet} zoom={zoom} offset={offset} onClick={updateSelectedPlanet} />
             )}
         </div>
     </div>;

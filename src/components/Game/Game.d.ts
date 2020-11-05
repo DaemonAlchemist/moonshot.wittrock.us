@@ -13,7 +13,6 @@ export declare interface IGameStateProps {
 // What gets returned from the second connect function (mapDispatchToProps)
 export declare interface IGameDispatchProps {
     resetLevel: (level:number) => void;
-    reset: () => void;
     updateTime: (t:number) => void;
 }
 

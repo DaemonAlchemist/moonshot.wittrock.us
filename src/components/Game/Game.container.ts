@@ -49,13 +49,15 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         // TODO: Choose an ending body
 
         // TODO: Set the initial ship position and velocity
-        dispatch(ship.update({position: {x: 0, y: 0}, velocity: {x: 1, y: 0}}));
+        dispatch(ship.update({
+            initialPosition: {x: 0, y:100},
+            initialVelocity: {x: 1, y:0},
+            position: {x: 0, y: 100},
+            velocity: {x: 1, y: 0},
+        }));
 
         // TODO: clear the deltaV's
     }, {})(),
-    reset: () => {
-        dispatch(timer.update({time: 0}));
-    },
     updateTime: (time:number) => {
         dispatch(timer.update({time}));
     }

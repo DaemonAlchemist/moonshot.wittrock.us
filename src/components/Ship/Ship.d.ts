@@ -1,4 +1,4 @@
-import { IShip, IPosition, ITimer } from "../../util/sim";
+import { IShip, IPosition } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
 export declare interface IShipProps {
@@ -15,7 +15,7 @@ export declare interface IShipStateProps {
 
 // What gets returned from the second connect function (mapDispatchToProps)
 export declare interface IShipDispatchProps {
-    update: (newShip:IShip) => void;
+    update: (newShip:Partial<IShip>) => void;
 }
 
 // What gets added in the third connect function (mergeProps)

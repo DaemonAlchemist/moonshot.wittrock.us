@@ -1,6 +1,6 @@
 import { ICelestialBody, IPosition, ISolverOptions, ISatellite } from "./sim";
 
-const G = 1.0;
+export const G = 1.0;
 const GPrime = 2*Math.PI / Math.sqrt(G);
 
 export const period = (p:ISatellite):number => GPrime * Math.sqrt(p.orbit.a * p.orbit.a * p.orbit.a / p.orbit.parent.attributes.mass);

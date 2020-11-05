@@ -18,14 +18,17 @@ export const GameComponent = (props:GameProps) => {
     const [level, setLevel] = React.useState(1);
     const changeLevel = (newLevel:number) => () => {setLevel(newLevel);}
 
+    const [resetTrigger, setResetTrigger] = React.useState(false);
     React.useEffect(() => {
         resetLevel(level);
+        setResetTrigger(!resetTrigger);
     }, [resetLevel, level]);
+    const reset = () => {resetLevel(level);}
 
     React.useEffect(start, [start]);
 
     return <Layout>
-        <Layout.Sider>
+        <Layout.Sider width="300px">
             <h1>MoonShot</h1>
             <hr />
             <h1>Level</h1>
@@ -34,15 +37,15 @@ export const GameComponent = (props:GameProps) => {
             <RightCircleTwoTone onClick={changeLevel(level + 1)} />
             <hr />
             <h1>Time</h1>
-            <LeftCircleTwoTone onClick={props.reset}/>
+            <LeftCircleTwoTone onClick={reset}/>
             {isRunning && <PauseCircleTwoTone onClick={stop} />}
             {!isRunning && <PlayCircleTwoTone onClick={start} />}
             <hr />
         </Layout.Sider>
         <Layout.Content className="viewports">
-            <Viewport className="start-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} />
-            <Viewport className="main-viewport" center={{x: 0, y: 0}} zoom={1} />
-            <Viewport className="end-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} />
+            <Viewport className="start-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
+            <Viewport className="main-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
+            <Viewport className="end-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
         </Layout.Content>
     </Layout>;
 }

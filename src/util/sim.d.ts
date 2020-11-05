@@ -11,6 +11,8 @@ export declare interface ITimer {
 export declare interface IShip {
     position: IPosition;
     velocity: IPosition;
+    initialPosition: IPosition;
+    initialVelocity: IPosition;
 }
 
 export declare interface IDeltaV {

@@ -5,6 +5,7 @@ export declare interface IViewportProps {
     className?:string;
     center:IPosition;
     zoom:number;
+    reset:boolean;
 }
 
 // What gets returned from the first connect function (mapStateToProps)

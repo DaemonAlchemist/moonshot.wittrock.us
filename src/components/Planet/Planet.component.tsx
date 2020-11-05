@@ -49,9 +49,15 @@ export const PlanetComponent = (props:PlanetProps) => {
         props.updatePosition(props.time);
     }, [props.time]);
 
+    const onClick = () => {
+        if(props.onClick) {
+            props.onClick(props.id);
+        }
+    }
+    
     return <>
         <div className="planet-container" style={getContainerStyle(props, props.time, props.offset, props.zoom)}>
-            <div style={getPlanetStyle(props, props.zoom)} />
+            <div onClick={onClick} style={getPlanetStyle(props, props.zoom)} />
         </div>
         <div className="planet-container" style={getDotStyle(props, props.time, props.offset, props.zoom)} />
     </>;

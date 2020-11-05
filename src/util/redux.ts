@@ -38,7 +38,7 @@ export const timer:Singleton<ITimer, {}> = singleton<ITimer>(timerDef);
 const shipDef:ISingletonDefinition<IShip, {}> = {
     module: "moonshot",
     entity: "ship",
-    default: {position:{x: 0, y:0}, velocity: {x: 0, y:0}}
+    default: {position:{x: 0, y:0}, velocity: {x: 0, y:0}, initialPosition: {x: 0, y:0}, initialVelocity: {x: 0, y:0}}
 };
 export const ship:Singleton<IShip, {}> = singleton<IShip>(shipDef);
 
