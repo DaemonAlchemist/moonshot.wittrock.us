@@ -2,7 +2,7 @@ import random from 'random';
 import { connect } from 'react-redux';
 import seedrandom from 'seedrandom';
 import { memoize } from 'ts-functional';
-import { planet, timer, ship } from '../../util/redux';
+import { planet, timer, ship, deltaV } from '../../util/redux';
 import { ViewableCelestialObject } from '../../util/sim';
 import { GameComponent } from './Game.component';
 import { GameProps, IGameDispatchProps, IGameProps, IGameStateProps } from "./Game.d";
@@ -11,10 +11,23 @@ import { getNewPlanet, getNewSun } from './Game.helpers';
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IGameProps):IGameStateProps => ({
     timer: timer.get(state),
+    deltaVs: deltaV.getMultiple(state, () => true).sort((a, b) => a.time - b.time),
 });
+
+let curId = 0;
+const getId = () => `${curId++}`;
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions
 export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatchProps => ({
+    addDeltaV: (time:number) => () => {
+        dispatch(deltaV.add({id: getId(), time, deltaV: 0, angle: 0}));
+    },
+    onChangeDeltaV: (id:string, field:string) => (value?:string | number) => {
+        dispatch(deltaV.update({id, [field]: value ? +value : 0}));
+    },
+    onDeleteDeltaV: (id:string) => () => {
+        dispatch(deltaV.delete(id));
+    },
     resetLevel:memoize(() => (level:number) => {
         // Clear and reset the old level
         console.log("Clearing old level");
