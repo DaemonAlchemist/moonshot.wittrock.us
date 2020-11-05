@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
-import { ShipComponent } from './Ship.component';
-import {IShipStateProps, IShipProps, IShipDispatchProps, ShipProps} from "./Ship.d";
-import { ship, timer, planet } from '../../util/redux';
-import { IShip, IPosition, ViewableCelestialObject } from '../../util/sim';
 import { G } from '../../util/orbit';
+import { deltaV, planet, ship, timer } from '../../util/redux';
+import { IPosition, IShip, ViewableCelestialObject } from '../../util/sim';
+import { ShipComponent } from './Ship.component';
+import { IShipDispatchProps, IShipProps, IShipStateProps, ShipProps } from "./Ship.d";
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IShipProps):IShipStateProps => ({
+    deltaVs: deltaV.getMultiple(state, () => true),
     ship: ship.get(state),
     time: timer.get(state).time,
     planets: planet.getMultiple(state, () => true),
@@ -48,10 +49,18 @@ export const mergeProps = (state:IShipStateProps, dispatch:IShipDispatchProps, p
         }, {x: 0, y: 0});
 
         // Update velocity based on current forces
-        const velocity:IPosition = {
+        let velocity:IPosition = {
             x: state.ship.velocity.x + force.x,
             y: state.ship.velocity.y + force.y,
         };
+
+        // Update velocity with any delta-Vs
+        const matchingDeltaV = state.deltaVs.filter(d => d.time === state.time);
+        if(matchingDeltaV.length > 0) {
+            const deltaV = matchingDeltaV[0];
+            velocity.x += deltaV.deltaV * Math.cos(deltaV.angle);
+            velocity.y += deltaV.deltaV * Math.sin(deltaV.angle);
+        }
 
         // Update ship with new position and velocity
         dispatch.update({position, velocity});

@@ -11,6 +11,7 @@ export declare interface IShipStateProps {
     ship:IShip;
     time:number;
     planets:ViewableCelestialObject[];
+    deltaVs:IDeltaV[];
 }
 
 // What gets returned from the second connect function (mapDispatchToProps)
