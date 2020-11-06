@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
+import { planet, timer } from '../../util/redux';
 import { ViewportComponent } from './Viewport.component';
-import {IViewportStateProps, IViewportProps, IViewportDispatchProps, ViewportProps} from "./Viewport.d";
-import { planet } from '../../util/redux';
+import { IViewportDispatchProps, IViewportProps, IViewportStateProps, ViewportProps } from "./Viewport.d";
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IViewportProps):IViewportStateProps => ({
     planets: planet.getMultiple(state, () => true),
+    time: timer.get(state).time,
 });
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions

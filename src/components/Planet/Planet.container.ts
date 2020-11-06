@@ -11,17 +11,7 @@ export const mapStateToProps = (state:any, props:IPlanetProps):IPlanetStateProps
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions
 export const mapDispatchToProps = (dispatch:any, props:IPlanetProps):IPlanetDispatchProps => ({
-    updatePosition: (time:number) => {
-        if(!!props) {
-            const newPosition = getPosition(props, time);
-            if(newPosition.x !== props.position.x || newPosition.y !== props.position.y) {
-                dispatch(planet.update({
-                    ...props,
-                    position: newPosition,
-                }));
-            }
-        }
-    }
+
 });
 
 // The mergeProps function:  Use this to define handlers and dispatchers that require access to state props

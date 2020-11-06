@@ -12,6 +12,7 @@ export declare interface IViewportProps {
 // What gets returned from the first connect function (mapStateToProps)
 export declare interface IViewportStateProps {
     planets: ViewableCelestialObject[];
+    time: number;
 }
 
 // What gets returned from the second connect function (mapDispatchToProps)

@@ -45,7 +45,6 @@ export declare interface IOrbit {
 export declare interface ICelestialBody {
     id: string;
     attributes: IBody;
-    position: IPosition;
     orbit?: IOrbit;
 }
 

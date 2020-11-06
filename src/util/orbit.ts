@@ -1,4 +1,6 @@
 import { ICelestialBody, IPosition, ISolverOptions, ISatellite } from "./sim";
+import { memoize } from "ts-functional";
+import { objectId } from "the-reducer";
 
 export const G = 1.0;
 const GPrime = 2*Math.PI / Math.sqrt(G);
@@ -38,9 +40,10 @@ export const solve = (f:(n:number) => number, options:ISolverOptions) => {
 
 // Source: https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion#Position_as_a_function_of_time
 // TODO:  Memoize this based on planet object id and t if performance becomes an issue
-export const getPosition = (planet:ICelestialBody, t:number):IPosition => {
+const _getPosition = (planet:ICelestialBody, t:number):IPosition => {
     if(typeof planet.orbit === "undefined") {
-        return planet.position;
+        // There is only one sun:  the "planet" without an orbit
+        return {x:0, y:0};
     } else {
         const s = planet as ISatellite;
 
@@ -64,3 +67,8 @@ export const getPosition = (planet:ICelestialBody, t:number):IPosition => {
         };
     }
 }
+
+export const getPosition = memoize(
+    _getPosition,
+    {keyGen: (args:[ICelestialBody, number]):string => `${objectId(args[0])}:${args[1]}`}
+);

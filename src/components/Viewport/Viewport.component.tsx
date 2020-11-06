@@ -4,6 +4,7 @@ import { Planet } from '../Planet';
 import { Ship } from '../Ship';
 import { ViewportProps } from "./Viewport.d";
 import './Viewport.less';
+import { getPosition } from '../../util/orbit';
 
 export const ViewportComponent = (props:ViewportProps) => {
     const [offset, setOffset] = React.useState<IPosition>({x: 0, y: 0});
@@ -52,16 +53,17 @@ export const ViewportComponent = (props:ViewportProps) => {
     const updateSelectedPlanet = (id:string) => {
         setSelectedPlanet(id === selectedPlanet ? "" : id);
     }
-    const selectedPlanetCenter = !!selectedPlanet ? props.planets.filter((p => p.id === selectedPlanet))[0].position : null;
+    const selectedPlanetCenter = !!selectedPlanet ? getPosition(props.planets.filter((p => p.id === selectedPlanet))[0], props.time) : null;
     if(selectedPlanetCenter) {
         if(selectedPlanetCenter.x !== center.x || selectedPlanetCenter.y !== center.y) {setCenter(selectedPlanetCenter);}
     }
 
+    const initialCenter = React.useRef(props.center);
     React.useEffect(() => {
         setSelectedPlanet("");
         setZoom(1);
-        setCenter(props.center);
-    }, [props.reset, props.center]);
+        setCenter(initialCenter.current);
+    }, []);
 
     return <div className={`viewport-container ${props.className}`}>
         <div className="viewport-zoom">

@@ -4,7 +4,6 @@ import random from 'random';
 export const getNewSun = ():ViewableCelestialObject => ({
     id: "sun",
     attributes: {mass: 100, radius: 30, name: "Sun"},
-    position: {x: 0, y: 0},
     view: {minViewSize: 20, borderColor: "ffff66", color: "ffffaa"}
 });
 
@@ -16,7 +15,6 @@ export const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCele
         id,
         attributes: {mass, radius: random.float(1, 5) * mass, name: id},
         orbit: {parent: sun, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
-        position: {x: 0, y: 0},
         view: {minViewSize: 10, borderColor: "6666ff", color: "aaaaff"}
     };
 
@@ -32,7 +30,6 @@ export const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCele
             id: moonId,
             attributes: {mass: moonMass, radius: random.float(0.1, 0.5) * moonMass, name: moonId},
             orbit: {parent: p, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
-            position: {x: 0, y: 0},
             view: {minViewSize: 1, borderColor: "66ff66", color: "aaffaa"}
         };
         bodies.push(m);

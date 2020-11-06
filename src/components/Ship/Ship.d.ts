@@ -1,4 +1,4 @@
-import { IShip, IPosition } from "../../util/sim";
+import { IShip, IPosition, ViewableCelestialObject } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
 export declare interface IShipProps {

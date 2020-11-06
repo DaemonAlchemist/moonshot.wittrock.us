@@ -9,7 +9,6 @@ const planetDef:IEntityDefinition<ViewableCelestialObject, {}> = {
     default: {
         id: "",
         attributes: {mass: 0, name: "", radius: 0},
-        position: {x: 0, y: 0},
         view: {minViewSize: 0, borderColor: "000000", color: "666666"}
     }
 }

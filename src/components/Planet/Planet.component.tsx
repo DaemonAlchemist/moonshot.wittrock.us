@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { abs2scr } from '../../util/orbit';
+import { abs2scr, getPosition } from '../../util/orbit';
 import { IPosition, ViewableCelestialObject } from '../../util/sim';
 import { PlanetProps } from "./Planet.d";
 import './Planet.less';
 
 const getContainerStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition, zoom:number):React.CSSProperties => {
-    const scrPos = abs2scr(planet.position, offset, zoom);
+    const position = getPosition(planet, t);
+    const scrPos = abs2scr(position, offset, zoom);
     const displayRadius = Math.max(planet.view.minViewSize , planet.attributes.radius * 2 * zoom);
     const size = `${displayRadius}px`;
     const data = {
@@ -32,7 +33,8 @@ const getPlanetStyle = (planet:ViewableCelestialObject, zoom:number):React.CSSPr
 }
 
 const getDotStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition, zoom:number):React.CSSProperties => {
-    const scrPos = abs2scr(planet.position, offset, zoom);
+    const position = getPosition(planet, t);
+    const scrPos = abs2scr(position, offset, zoom);
     const data = {
         background: `#ffffff`,
         height: `2px`,
@@ -45,10 +47,6 @@ const getDotStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition,
 }
 
 export const PlanetComponent = (props:PlanetProps) => {
-    React.useEffect(() => {
-        props.updatePosition(props.time);
-    }, [props.time]);
-
     const onClick = () => {
         if(props.onClick) {
             props.onClick(props.id);

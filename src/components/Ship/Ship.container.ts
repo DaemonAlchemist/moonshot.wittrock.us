@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { G } from '../../util/orbit';
+import { G, getPosition } from '../../util/orbit';
 import { deltaV, planet, ship, timer } from '../../util/redux';
 import { IPosition, IShip, ViewableCelestialObject } from '../../util/sim';
 import { ShipComponent } from './Ship.component';
@@ -35,9 +35,10 @@ export const mergeProps = (state:IShipStateProps, dispatch:IShipDispatchProps, p
         // Add the gravitational forces from the planets
         const force = state.planets.reduce((totalForce:IPosition, p:ViewableCelestialObject):IPosition => {
             // Add force from planets to velocity
+            const pPos = getPosition(p, state.time);
             const dir:IPosition = {
-                x: p.position.x - state.ship.position.x,
-                y: p.position.y - state.ship.position.y,
+                x: pPos.x - state.ship.position.x,
+                y: pPos.y - state.ship.position.y,
             };
             const d = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
 
