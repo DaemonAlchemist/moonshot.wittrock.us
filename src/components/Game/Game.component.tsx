@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { faFastBackward, faPause, faPlay, faStepForward, faStepBackward, faBackward, faForward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faFastBackward, faForward, faMoon, faPause, faPlay, faStepBackward, faStepForward } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import { Button, InputNumber, Layout, Slider, Table } from 'antd';
 import * as React from 'react';
@@ -36,7 +36,7 @@ export const GameComponent = (props:GameProps) => {
 
     return <Layout>
         <Layout.Sider width="300px">
-            <h1>MoonShot</h1>
+            <h1><Icon icon={faMoon} /> MoonShot <Icon icon={faMoon} /></h1>
             <hr />
 
             <div id="level-controls">
