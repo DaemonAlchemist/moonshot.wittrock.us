@@ -17,11 +17,9 @@ Update game logic
         - Show upload to high score list modal
 
 Update UX
-    - Performance:  decouple frame update timer from sim update timer
     - Add player name input
     - Add high score list component
     - Add load from high score list control
-    - Add sim speed slider
     - Tweak level generation parameters
         - Planet sizes and orbit parameters
         - Moon sizes and orbit parameters
