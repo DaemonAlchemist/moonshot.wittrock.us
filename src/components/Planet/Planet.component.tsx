@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getPosition, abs2scr } from '../../util/orbit';
+import { abs2scr } from '../../util/orbit';
 import { IPosition, ViewableCelestialObject } from '../../util/sim';
 import { PlanetProps } from "./Planet.d";
 import './Planet.less';

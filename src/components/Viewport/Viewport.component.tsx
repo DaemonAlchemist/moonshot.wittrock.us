@@ -4,7 +4,6 @@ import { Planet } from '../Planet';
 import { Ship } from '../Ship';
 import { ViewportProps } from "./Viewport.d";
 import './Viewport.less';
-import { abs2scr } from '../../util/orbit';
 
 export const ViewportComponent = (props:ViewportProps) => {
     const [offset, setOffset] = React.useState<IPosition>({x: 0, y: 0});
@@ -62,7 +61,7 @@ export const ViewportComponent = (props:ViewportProps) => {
         setSelectedPlanet("");
         setZoom(1);
         setCenter(props.center);
-    }, [props.reset]);
+    }, [props.reset, props.center]);
 
     return <div className={`viewport-container ${props.className}`}>
         <div className="viewport-zoom">

@@ -1,11 +1,11 @@
-import { LeftCircleTwoTone, PauseCircleTwoTone, PlayCircleTwoTone, PlusOutlined, RightCircleTwoTone, CloseCircleOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Layout, Row, Slider, Table, InputNumber } from 'antd';
+import { CloseCircleOutlined, LeftCircleTwoTone, PauseCircleTwoTone, PlayCircleTwoTone, PlusOutlined, RightCircleTwoTone } from "@ant-design/icons";
+import { Button, InputNumber, Layout, Slider, Table } from 'antd';
 import * as React from 'react';
+import { IDeltaV } from "../../util/sim";
 import { useTimer } from '../../util/useTimer';
 import { Viewport } from '../Viewport';
 import { GameProps } from "./Game.d";
 import './Game.less';
-import { IDeltaV } from "../../util/sim";
 
 export const GameComponent = (props:GameProps) => {
     const {resetLevel, tick} = props;
@@ -22,7 +22,7 @@ export const GameComponent = (props:GameProps) => {
     const [resetTrigger, setResetTrigger] = React.useState(false);
     React.useEffect(() => {
         resetLevel(level);
-        setResetTrigger(!resetTrigger);
+        setResetTrigger(r => !r);
     }, [resetLevel, level]);
     const reset = () => {resetLevel(level);}
 
