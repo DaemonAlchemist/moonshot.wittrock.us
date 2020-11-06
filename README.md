@@ -30,6 +30,8 @@ Backend
     - Setup dynamoDB tables to record high scores
     - Setup API for high score CRUD:
         - .../moonshot/{levelId} [GET | POST]
+            - POST should check validation code before uploading
+            - POST should not allow identical high scores to be uploaded
         - .../moonshot/{levelId}/{scoreId} [GET]
     - Setup API for high score validation
         - Lambda function to run sim and validate results, and return an encrypted validation code
