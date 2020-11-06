@@ -9,9 +9,7 @@ export declare interface IShipProps {
 // What gets returned from the first connect function (mapStateToProps)
 export declare interface IShipStateProps {
     ship:IShip;
-    timer:ITimer;
-    planets:ViewableCelestialObject[];
-    deltaVs:IDeltaV[];
+    flameOpacity:number;
 }
 
 // What gets returned from the second connect function (mapDispatchToProps)

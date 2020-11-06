@@ -1,4 +1,4 @@
-import { faRocket } from '@fortawesome/free-solid-svg-icons';
+import { faRocket, faFireAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import * as React from 'react';
 import { abs2scr } from '../../util/orbit';
@@ -22,5 +22,6 @@ const getShipStyle = (ship:IShip, offset:IPosition, zoom:number):React.CSSProper
 export const ShipComponent = (props:ShipProps) => 
     <div className="ship" style={getShipStyle(props.ship, props.offset, props.zoom)}>
         <Icon icon={faRocket} />
+        <Icon className="fire" icon={faFireAlt} style={{opacity: props.flameOpacity}} />
     </div>;
     

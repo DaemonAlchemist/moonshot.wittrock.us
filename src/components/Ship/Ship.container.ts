@@ -4,13 +4,18 @@ import { IShip } from '../../util/sim';
 import { ShipComponent } from './Ship.component';
 import { IShipDispatchProps, IShipProps, IShipStateProps, ShipProps } from "./Ship.d";
 import { tick } from './Ship.helpers';
+import { last } from 'ts-functional';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IShipProps):IShipStateProps => ({
-    deltaVs: deltaV.getMultiple(state, () => true),
+    flameOpacity: (() => {
+        const time = timer.get(state).time;
+        const deltaVs = deltaV.getMultiple(state, (d) => d.time < time);
+        const sinceLastBurn = time - (last(deltaVs) || {time: -1000}).time;
+        const burnLength = 10;
+        return Math.max(0, (burnLength - sinceLastBurn) / burnLength);
+    })(),
     ship: ship.get(state),
-    timer: timer.get(state),
-    planets: planet.getMultiple(state, () => true),
 });
 
 // The mapDispatchToProps function:  Use this to define handlers and dispatch basic actions

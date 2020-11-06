@@ -26,8 +26,8 @@ export const tick = (ship:IShip, planets:ICelestialBody[], deltaVs:IDeltaV[], ba
             }, {x: 0, y: 0});
 
             // Update the ship's position based on last velocity
-            position.x += velocity.x;
-            position.y += velocity.y;
+            position.x += velocity.x + force.x / 2;
+            position.y += velocity.y + force.x / 2;
 
             // Update velocity based on current forces
             velocity.x += force.x;
