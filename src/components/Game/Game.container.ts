@@ -3,15 +3,18 @@ import { connect } from 'react-redux';
 import seedrandom from 'seedrandom';
 import { memoize } from 'ts-functional';
 import { planet, timer, ship, deltaV } from '../../util/redux';
-import { ViewableCelestialObject } from '../../util/sim';
+import { ViewableCelestialObject, IShip } from '../../util/sim';
 import { GameComponent } from './Game.component';
 import { GameProps, IGameDispatchProps, IGameProps, IGameStateProps } from "./Game.d";
 import { getNewPlanet, getNewSun } from './Game.helpers';
+import { tick } from '../Ship/Ship.helpers';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IGameProps):IGameStateProps => ({
     timer: timer.get(state),
     deltaVs: deltaV.getMultiple(state, () => true).sort((a, b) => a.time - b.time),
+    ship: ship.get(state),
+    planets: planet.getMultiple(state, () => true),
 });
 
 let curId = 0;
@@ -71,9 +74,15 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
 
         // TODO: clear the deltaV's
     }, {})(),
+    updateShip: (s:Partial<IShip>) => {
+        dispatch(ship.update(s));
+    },
+    updateSpeed: (speed:number) => () => {
+        dispatch(timer.update({speed}));
+    },
     updateTime: (time:number) => {
         dispatch(timer.update({time}));
-    }
+    },
 });
 
 // The mergeProps function:  Use this to define handlers and dispatchers that require access to state props
@@ -81,8 +90,9 @@ export const mergeProps = (state:IGameStateProps, dispatch:IGameDispatchProps, p
     ...state,
     ...dispatch,
     ...props,
-    tick: (dt:number) => {
-        dispatch.updateTime(state.timer.time + dt);
+    tick: () => {
+        dispatch.updateTime(state.timer.time + state.timer.speed);
+        dispatch.updateShip(tick(state.ship, state.planets, state.deltaVs, state.timer.time, state.timer.speed));
     }
 });
 

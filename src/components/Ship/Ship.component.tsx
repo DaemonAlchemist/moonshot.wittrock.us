@@ -18,12 +18,8 @@ const getShipStyle = (ship:IShip, offset:IPosition, zoom:number):React.CSSProper
     return data;
 }
 
-export const ShipComponent = (props:ShipProps) => {
-    React.useEffect(() => {
-        props.tick();
-    }, [props.time]);
-
-    return <div className="ship" style={getShipStyle(props.ship, props.offset, props.zoom)}>
+export const ShipComponent = (props:ShipProps) => 
+    <div className="ship" style={getShipStyle(props.ship, props.offset, props.zoom)}>
         <SendOutlined />
     </div>;
-}
+    

@@ -6,6 +6,7 @@ export declare interface IPosition {
 
 export declare interface ITimer {
     time: number;
+    speed: number;
 }
 
 export declare interface IShip {

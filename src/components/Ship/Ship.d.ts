@@ -1,4 +1,4 @@
-import { IShip, IPosition, ViewableCelestialObject } from "../../util/sim";
+import { IShip, IPosition, ViewableCelestialObject, ITimer } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
 export declare interface IShipProps {
@@ -9,7 +9,7 @@ export declare interface IShipProps {
 // What gets returned from the first connect function (mapStateToProps)
 export declare interface IShipStateProps {
     ship:IShip;
-    time:number;
+    timer:ITimer;
     planets:ViewableCelestialObject[];
     deltaVs:IDeltaV[];
 }
@@ -21,7 +21,7 @@ export declare interface IShipDispatchProps {
 
 // What gets added in the third connect function (mergeProps)
 export declare interface IShipMergeProps {
-    tick: () => void;
+
 }
 
 // The props that finally get passed to the component

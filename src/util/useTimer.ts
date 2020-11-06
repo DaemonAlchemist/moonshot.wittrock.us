@@ -2,13 +2,12 @@ import * as React from 'react';
 
 export declare interface IUseTimerOptions {
     interval: number;
-    speed: number;
-    onTick: (dt:number) => void;
+    onTick: () => void;
     isRunning: boolean;
 }
 
 export const useTimer = (options:IUseTimerOptions):[boolean, () => void, () => void] => {
-    const {interval, speed, onTick} = options;
+    const {interval, onTick} = options;
     
     const [isRunning, setIsRunning] = React.useState(options.isRunning);
 
@@ -22,9 +21,9 @@ export const useTimer = (options:IUseTimerOptions):[boolean, () => void, () => v
 
     const tick = React.useCallback(() => {
         if(isRunning) {
-            onTick(speed);
+            onTick();
         }
-    }, [isRunning, onTick, speed]);
+    }, [isRunning, onTick, ]);
 
     React.useEffect(() => {
         const timer = window.setInterval(tick, interval);

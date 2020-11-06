@@ -1,4 +1,6 @@
-import { CloseCircleOutlined, LeftCircleTwoTone, PauseCircleTwoTone, PlayCircleTwoTone, PlusOutlined, RightCircleTwoTone } from "@ant-design/icons";
+import { CloseCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { faFastBackward, faPause, faPlay, faStepForward, faStepBackward, faBackward, faForward } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import { Button, InputNumber, Layout, Slider, Table } from 'antd';
 import * as React from 'react';
 import { IDeltaV } from "../../util/sim";
@@ -11,8 +13,7 @@ export const GameComponent = (props:GameProps) => {
     const {resetLevel, tick} = props;
 
     const [isRunning, start, stop] = useTimer({
-        interval: 50,
-        speed: 1,
+        interval: 5,
         onTick: tick,
         isRunning: true,
     });
@@ -35,19 +36,26 @@ export const GameComponent = (props:GameProps) => {
 
     return <Layout>
         <Layout.Sider width="300px">
-            <h1>MoonShot: {props.timer.time}</h1>
+            <h1>MoonShot</h1>
             <hr />
 
-            <h1>Level</h1>
-            <LeftCircleTwoTone title="Previous level" onClick={level > 1 ? changeLevel(level - 1) : undefined} />
-            <span className="curLevel">{level}</span>
-            <RightCircleTwoTone title="Next level" onClick={changeLevel(level + 1)} />
+            <div id="level-controls">
+                <h1>Level</h1>
+                <Icon icon={faStepBackward} title="Previous level" onClick={level > 1 ? changeLevel(level - 1) : undefined} />
+                <span className="curLevel">{level}</span>
+                <Icon icon={faStepForward} title="Next level" onClick={changeLevel(level + 1)} />
+            </div>
             <hr />
 
-            <h1>Time</h1>
-            <LeftCircleTwoTone title="Reset level" onClick={reset}/>
-            {isRunning && <PauseCircleTwoTone title="Pause" onClick={stop} />}
-            {!isRunning && <PlayCircleTwoTone title="Play" onClick={start} />}
+            <div id="time-controls">
+                <h1 className="time">Time: {props.timer.time}</h1>
+                <h1 className="speed">Speed: {props.timer.speed}</h1>
+                <Icon icon={faFastBackward} title="Reset level" onClick={reset}/>
+                <Icon icon={faBackward} onClick={props.timer.speed > 1 ? props.updateSpeed(props.timer.speed / 2) : undefined} />
+                {isRunning && <Icon icon={faPause} title="Pause" onClick={stop} />}
+                {!isRunning && <Icon icon={faPlay} title="Play" onClick={start} />}
+                <Icon icon={faForward} onClick={props.updateSpeed(props.timer.speed * 2)} />
+            </div>
             <hr />
 
             <h1>Delta Vs</h1>

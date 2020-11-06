@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
-import { G, getPosition } from '../../util/orbit';
 import { deltaV, planet, ship, timer } from '../../util/redux';
-import { IPosition, IShip, ViewableCelestialObject } from '../../util/sim';
+import { IShip } from '../../util/sim';
 import { ShipComponent } from './Ship.component';
 import { IShipDispatchProps, IShipProps, IShipStateProps, ShipProps } from "./Ship.d";
+import { tick } from './Ship.helpers';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IShipProps):IShipStateProps => ({
     deltaVs: deltaV.getMultiple(state, () => true),
     ship: ship.get(state),
-    time: timer.get(state).time,
+    timer: timer.get(state),
     planets: planet.getMultiple(state, () => true),
 });
 
@@ -25,47 +25,6 @@ export const mergeProps = (state:IShipStateProps, dispatch:IShipDispatchProps, p
     ...state,
     ...dispatch,
     ...props,
-    tick: () => {
-        // Update the ship's position based on last velocity
-        const position:IPosition = {
-            x: state.ship.position.x + state.ship.velocity.x,
-            y: state.ship.position.y + state.ship.velocity.y,
-        }
-
-        // Add the gravitational forces from the planets
-        const force = state.planets.reduce((totalForce:IPosition, p:ViewableCelestialObject):IPosition => {
-            // Add force from planets to velocity
-            const pPos = getPosition(p, state.time);
-            const dir:IPosition = {
-                x: pPos.x - state.ship.position.x,
-                y: pPos.y - state.ship.position.y,
-            };
-            const d = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
-
-            const f = G * p.attributes.mass / (d*d);
-            return {
-                x: totalForce.x + f * dir.x / d,
-                y: totalForce.y + f * dir.y / d,
-            }
-        }, {x: 0, y: 0});
-
-        // Update velocity based on current forces
-        let velocity:IPosition = {
-            x: state.ship.velocity.x + force.x,
-            y: state.ship.velocity.y + force.y,
-        };
-
-        // Update velocity with any delta-Vs
-        const matchingDeltaV = state.deltaVs.filter(d => d.time === state.time);
-        if(matchingDeltaV.length > 0) {
-            const deltaV = matchingDeltaV[0];
-            velocity.x += deltaV.deltaV * Math.cos(deltaV.angle);
-            velocity.y += deltaV.deltaV * Math.sin(deltaV.angle);
-        }
-
-        // Update ship with new position and velocity
-        dispatch.update({position, velocity});
-    }
 });
 
 export const Ship = connect<IShipStateProps, IShipDispatchProps, IShipProps, ShipProps, any>(

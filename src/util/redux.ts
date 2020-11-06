@@ -28,7 +28,7 @@ export const deltaV:Entity<IDeltaV> = entity<IDeltaV>(deltaVDef);
 const timerDef:ISingletonDefinition<ITimer, {}> = {
     module: "moonshot",
     entity: "timer",
-    default: {time: 0},
+    default: {time: 0, speed: 1},
 }
 export const timer:Singleton<ITimer, {}> = singleton<ITimer>(timerDef);
 

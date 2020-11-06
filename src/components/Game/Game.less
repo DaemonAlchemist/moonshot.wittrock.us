@@ -1,17 +1,51 @@
 @viewportSize: 400px;
 @viewportOffset: 16px;
 
+@controlSize: 32pt;
+@textColor: #ffffff;
+
+.iconControl() {
+    color: @textColor;
+    font-size: @controlSize;
+    display: inline-block;
+    margin: 0 8px;
+}
+
 .ant-layout-sider-children {
     text-align: center;
     h1 {
-        color: #ffffff;
+        color: @textColor;
         text-align: center;
     }
-    > .anticon, .curLevel {
-        color: #ffffff;
-        font-size: 32pt;
-        display: inline-block;
-        margin: 0 8px;
+    #level-controls {
+        position: relative;
+        padding-top: @controlSize;
+        h1 {
+            position: absolute;
+            top: 0px;
+            left: 8px;
+        }
+        svg {.iconControl();}
+    }
+    #time-controls {
+        position: relative;
+        padding-top: @controlSize;
+        h1.time {
+            position: absolute;
+            left: 8px; 
+            top: 0px;
+        }
+        h1.speed {
+            position: absolute;
+            right: 8px; 
+            top: 0px;
+        }
+        svg {
+            .iconControl();
+        }
+    }
+    .curLevel {
+        .iconControl();
     }
 }
 
@@ -20,13 +54,13 @@
     .main-viewport {
         width: 100%;
         height: 100vh;
-        border: solid 2px #ffffff;
+        border: solid 2px @textColor;
     }
     .inset-viewport {
         width: @viewportSize;
         height: @viewportSize;
         position: absolute;
-        border: solid 2px #ffffff;
+        border: solid 2px @textColor;
         z-index: 9;
     }
     .start-viewport {
