@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { faBackward, faFastBackward, faForward, faMoon, faPause, faPlay, faStepBackward, faStepForward } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faFastBackward, faForward, faMoon, faPause, faPlay, faStepBackward, faStepForward, faRocket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import { Button, InputNumber, Layout, Slider, Table } from 'antd';
 import * as React from 'react';
@@ -29,13 +29,15 @@ export const GameComponent = (props:GameProps) => {
 
     React.useEffect(start, [start]);
 
-    const deltaVInput = (deltaV:number, record:IDeltaV) => <Slider value={deltaV} onChange={props.onChangeDeltaV(record.id, "deltaV")} min={0} max={10} step={0.01} />;
-    const timeInput   = (time:number, record:IDeltaV)   => <InputNumber value={time} onChange={props.onChangeDeltaV(record.id, "time")}   />;
-    const angleInput  = (angle:number, record:IDeltaV)  => <Slider value={angle} onChange={props.onChangeDeltaV(record.id, "angle")} min={0} max={2*Math.PI} step={0.01} />;
+    const deltaVInput = (deltaV:number, record:IDeltaV) => <InputNumber value={deltaV} onChange={props.onChangeDeltaV(record.id, "deltaV")} style={{width: "100%"}} />;
+    const timeInput   = (time:number, record:IDeltaV)   => <InputNumber value={time} onChange={props.onChangeDeltaV(record.id, "time")} style={{width: "100%"}} />;
+    const angleInput  = (angle:number, record:IDeltaV)  =>
+        <Slider value={angle} onChange={props.onChangeDeltaV(record.id, "angle")} min={0} max={2*Math.PI} step={0.01} />;
+    const angleDisplay = (angle:number) => <Icon icon={faRocket} style={{transform: `rotate(${angle + Math.PI / 4}rad)`}}/>;
     const actions     = (id:string) => <CloseCircleOutlined title="Remove delta-V" onClick={props.onDeleteDeltaV(id)} />;
 
     return <Layout>
-        <Layout.Sider width="300px">
+        <Layout.Sider width="400px">
             <h1><Icon icon={faMoon} /> MoonShot <Icon icon={faMoon} /></h1>
             <hr />
 
@@ -59,11 +61,12 @@ export const GameComponent = (props:GameProps) => {
             <hr />
 
             <h1>Delta Vs</h1>
-            <Table dataSource={props.deltaVs} pagination={false} size="small" style={{margin: "16px"}}>
-                <Table.Column width={75} dataIndex="deltaV" title="Delta-V" render={deltaVInput}/>
-                <Table.Column width={75} dataIndex="time" title="Time" render={timeInput}/>
+            <Table dataSource={props.deltaVs} rowKey="id" pagination={false} size="small" style={{margin: "16px"}}>
+                <Table.Column dataIndex="deltaV" title="Delta-V" render={deltaVInput} width="75px"/>
+                <Table.Column dataIndex="time" title="Time" render={timeInput} width="75px" />
                 <Table.Column dataIndex="angle" title="Angle" render={angleInput} />
-                <Table.Column dataIndex="id" render={actions} />
+                <Table.Column dataIndex="angle" render={angleDisplay} width="22px"/>
+                <Table.Column dataIndex="id" render={actions} width="25px" />
             </Table>
             <Button onClick={props.addDeltaV(props.timer.time)}><PlusOutlined /> Add delta-V</Button>
         </Layout.Sider>

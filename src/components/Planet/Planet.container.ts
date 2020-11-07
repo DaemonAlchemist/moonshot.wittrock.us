@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
-import { getPosition } from '../../util/orbit';
-import { planet, timer } from '../../util/redux';
+import { timer } from '../../util/redux';
 import { PlanetComponent } from './Planet.component';
 import { IPlanetDispatchProps, IPlanetProps, IPlanetStateProps, PlanetProps } from "./Planet.d";
 
