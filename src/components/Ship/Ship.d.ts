@@ -1,4 +1,4 @@
-import { IShip, IPosition, ViewableCelestialObject, ITimer } from "../../util/sim";
+import { IPosition, IShip } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
 export declare interface IShipProps {
@@ -10,6 +10,7 @@ export declare interface IShipProps {
 export declare interface IShipStateProps {
     ship:IShip;
     flameOpacity:number;
+    angle:number;
 }
 
 // What gets returned from the second connect function (mapDispatchToProps)

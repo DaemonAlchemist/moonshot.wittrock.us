@@ -1,17 +1,29 @@
 import { connect } from 'react-redux';
-import { deltaV, planet, ship, timer } from '../../util/redux';
+import { first, last } from 'ts-functional';
+import { deltaV, ship, timer } from '../../util/redux';
 import { IShip } from '../../util/sim';
 import { ShipComponent } from './Ship.component';
 import { IShipDispatchProps, IShipProps, IShipStateProps, ShipProps } from "./Ship.d";
-import { tick } from './Ship.helpers';
-import { last } from 'ts-functional';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IShipProps):IShipStateProps => ({
+    angle: (() => {
+        const time = timer.get(state).time;
+        const curDeltaV = first(deltaV.getMultiple(state, (d) => d.time === time));
+        if(!!curDeltaV) {return curDeltaV.angle;}
+        const prevDeltaV = last(deltaV.getMultiple(state, (d) => d.time < time));
+        const nextDeltaV = first(deltaV.getMultiple(state, (d) => d.time > time));
+        const prevAngle = !!prevDeltaV ? prevDeltaV.angle : 0;
+        const prevTime = !!prevDeltaV ? prevDeltaV.time : 0;
+        const nextAngle = !!nextDeltaV ? nextDeltaV.angle : 0;
+        const nextTime = !!nextDeltaV ? nextDeltaV.time : 999999;
+        const pct = (time - prevTime) / (nextTime - prevTime);
+        return pct * (nextAngle - prevAngle) + prevAngle;
+    })(),
     flameOpacity: (() => {
         const time = timer.get(state).time;
-        const deltaVs = deltaV.getMultiple(state, (d) => d.time < time);
-        const sinceLastBurn = time - (last(deltaVs) || {time: -1000}).time;
+        const prevDeltaV = last(deltaV.getMultiple(state, (d) => d.time < time));
+        const sinceLastBurn = prevDeltaV ? time - prevDeltaV.time : 1000;
         const burnLength = 10;
         return Math.max(0, (burnLength - sinceLastBurn) / burnLength);
     })(),

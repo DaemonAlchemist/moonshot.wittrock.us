@@ -23,7 +23,6 @@ Update UX
     - Tweak level generation parameters
         - Planet sizes and orbit parameters
         - Moon sizes and orbit parameters
-    - Show relative rocket direction in tracked views
 
 Backend
     - Setup dynamoDB tables to record high scores
