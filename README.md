@@ -1,9 +1,10 @@
 MoonShot ToDo
 =============
 Add start/target handling
-    - Pick a starting planet
+    - Tweak level generation parameters
+        - Planet sizes and orbit parameters
+        - Moon sizes and orbit parameters
     - Pick a starting orbit
-    - Pick a target planet
     - Pick a target (circular) orbit
     - Place rocket around starting planet in starting orbit
     - Track starting planet in "Start" viewport
@@ -20,9 +21,9 @@ Update UX
     - Add player name input
     - Add high score list component
     - Add load from high score list control
-    - Tweak level generation parameters
-        - Planet sizes and orbit parameters
-        - Moon sizes and orbit parameters
+
+Bugs
+    - Completely broken in Firefox
 
 Backend
     - Setup dynamoDB tables to record high scores

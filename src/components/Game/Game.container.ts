@@ -1,13 +1,11 @@
-import random from 'random';
 import { connect } from 'react-redux';
-import seedrandom from 'seedrandom';
 import { memoize } from 'ts-functional';
-import { planet, timer, ship, deltaV } from '../../util/redux';
-import { ViewableCelestialObject, IShip } from '../../util/sim';
+import { deltaV, planet, ship, timer } from '../../util/redux';
+import { resetLevel } from '../../util/resetLevel';
+import { IShip } from '../../util/sim';
+import { tick } from '../Ship/Ship.helpers';
 import { GameComponent } from './Game.component';
 import { GameProps, IGameDispatchProps, IGameProps, IGameStateProps } from "./Game.d";
-import { getNewPlanet, getNewSun } from './Game.helpers';
-import { tick } from '../Ship/Ship.helpers';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IGameProps):IGameStateProps => ({
@@ -32,47 +30,18 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         dispatch(deltaV.delete(id));
     },
     resetLevel:memoize(() => (level:number) => {
+        const {planets, newShip, start, target} = resetLevel(level);
+
+        console.log("Starting planet");
+        console.log(start);
+        console.log("Target planet");
+        console.log(target);
+
         // Clear and reset the old level
-        console.log("Clearing old level");
-        dispatch(planet.clear());
         dispatch(timer.update({time: 0}));
-
-        // List all bodies in the system
-        const bodies:ViewableCelestialObject[] = [];
-
-        // Seed the random number generator with the level number
-        random.use(seedrandom(`${level}`));
-
-        // Create the sun
-        console.log("Creating sun");
-        const sun:ViewableCelestialObject = getNewSun();
-        bodies.push(sun);
-        console.log(sun);
-        dispatch(planet.add(sun));
-
-        // Create the planets
-        const count:number = random.int(1, 10);
-        console.log(`Planet count: ${count}`);
-
-        for(let i=0; i<count; i++) {
-            const newPlanets = getNewPlanet(sun, i);
-            bodies.concat(newPlanets);
-            dispatch(planet.addMultiple(newPlanets));
-        }
-
-        // TODO: Choose a starting body
-
-        // TODO: Choose an ending body
-
-        // TODO: Set the initial ship position and velocity
-        dispatch(ship.update({
-            initialPosition: {x: 0, y:100},
-            initialVelocity: {x: 1, y:0},
-            position: {x: 0, y: 100},
-            velocity: {x: 1, y: 0},
-        }));
-
-        // TODO: clear the deltaV's
+        dispatch(planet.clear());
+        dispatch(planet.addMultiple(planets));
+        dispatch(ship.update(newShip));
     }, {})(),
     updateShip: (s:Partial<IShip>) => {
         dispatch(ship.update(s));
