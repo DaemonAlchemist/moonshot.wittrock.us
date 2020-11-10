@@ -43,17 +43,22 @@ const _getPosition = memoize((planet:ICelestialBody, t:number):IVector => {
     } else {
         const s = planet as ISatellite;
 
-        let M = (s.orbit.n || 1) * t + s.orbit.v0;
+        let M = (s.orbit.n as number) * t + s.orbit.v0;
         if(M > Math.PI) {M = M - Math.floor(Math.PI / M) * Math.PI;}
         const f = (E:number) => E - s.orbit.e * Math.sin(E) - M;
         const E = solve(f, {max: M, min: M/2});
 
-        const r = s.orbit.a * (1 - s.orbit.e * Math.cos(E));
+        const cosE = Math.cos(E);
+        const sinV = Math.sqrt(1 - s.orbit.e * s.orbit.e) * Math.sin(E);
+        const cosV = cosE - s.orbit.e;
+        const vl = Math.sqrt(sinV * sinV + cosV * cosV);
+
+        const r = s.orbit.a * (1 - s.orbit.e * cosE) / vl;
 
         const parentPos = getPosition(s.orbit.parent, t);
         return {
-            x: parentPos.x - r * (Math.cos(E) - s.orbit.e),
-            y: parentPos.y + r * (Math.sqrt(1 - s.orbit.e * s.orbit.e) * Math.sin(E)),
+            x: parentPos.x - r * cosV,
+            y: parentPos.y + r * sinV,
         };
     }
 }, {keyGen: ([p, t]) => `${objectId(p)}:${t}`});
