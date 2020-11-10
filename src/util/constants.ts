@@ -10,7 +10,7 @@ export const aEarth = sci(1.49, 11);
 export const G = sci(6.674, -11);
 
 export const tickInterval = 25;
-export const dT = 10;
+export const dT = 400;
 export const baseSpeed = 1000 / tickInterval * dT;
 
 export const zoomSpeed = 1.2;

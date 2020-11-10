@@ -8,7 +8,7 @@ import { useTimer } from '../../util/useTimer';
 import { Viewport } from '../Viewport';
 import { GameProps } from "./Game.d";
 import './Game.less';
-import { tickInterval, baseSpeed, zoomSpeed } from "../../util/constants";
+import { tickInterval, baseSpeed, zoomSpeed, dT } from "../../util/constants";
 
 export const GameComponent = (props:GameProps) => {
     const {resetLevel, tick} = props;
@@ -31,11 +31,21 @@ export const GameComponent = (props:GameProps) => {
     React.useEffect(start, [start]);
 
     const deltaVInput = (deltaV:number, record:IDeltaV) => <InputNumber value={deltaV} onChange={props.onChangeDeltaV(record.id, "deltaV")} style={{width: "100%"}} />;
-    const timeInput   = (time:number, record:IDeltaV)   => <InputNumber value={time} onChange={props.onChangeDeltaV(record.id, "time")} style={{width: "100%"}} />;
+    const timeInput   = (time:number, record:IDeltaV)   => <InputNumber value={time} onChange={props.onChangeDeltaV(record.id, "time")} style={{width: "100%"}} step={dT}/>;
     const angleInput  = (angle:number, record:IDeltaV)  =>
         <Slider value={angle} onChange={props.onChangeDeltaV(record.id, "angle")} min={0} max={2*Math.PI} step={0.01} />;
     const angleDisplay = (angle:number) => <Icon icon={faRocket} style={{transform: `rotate(${angle + Math.PI / 4}rad)`}}/>;
     const actions     = (id:string) => <CloseCircleOutlined title="Remove delta-V" onClick={props.onDeleteDeltaV(id)} />;
+
+    const time = (t:number):string => {
+        const s = t % 60; t = Math.floor(t/60);
+        const m = t % 60; t = Math.floor(t/60);
+        const h = t % 24; t = Math.floor(t/24);
+        const d = t % 365; t = Math.floor(t/365);
+        const y = t;
+
+        return `${y}:${d}:${h}:${m}:${s}`;
+    }
 
     return <Layout>
         <Layout.Sider width="400px">
@@ -51,8 +61,8 @@ export const GameComponent = (props:GameProps) => {
             <hr />
 
             <div id="time-controls">
-                <h1 className="time">Time: {props.timer.time}</h1>
-                <h1 className="speed">Speed: {props.timer.steps * baseSpeed} ({props.timer.steps} X {baseSpeed})</h1>
+                <h1 className="time">Time: {time(props.timer.time)}</h1>
+                <h1 className="speed">Speedup: {props.timer.steps}</h1>
                 <Icon icon={faFastBackward} title="Reset level" onClick={reset}/>
                 <Icon icon={faBackward} onClick={props.timer.steps > 1 ? props.updateSpeed(props.timer.steps / 2) : undefined} />
                 {isRunning && <Icon icon={faPause} title="Pause" onClick={stop} />}
