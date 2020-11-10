@@ -1,20 +1,30 @@
 import random from 'random';
 import seedrandom from 'seedrandom';
-import { ViewableCelestialObject } from "./sim";
+import { ViewableCelestialObject, IVector } from "./sim";
+import { getPosition } from './orbit';
+import { rSun, dGasGiant, rJupiter, rEarth, dRock, aEarth } from './constants';
+import { getMass, sci, orbitalSpeed } from './util';
+import { Vector } from './vector';
 
-const getNewSun = ():ViewableCelestialObject => ({
-    id: "sun",
-    attributes: {mass: 100, radius: 30, name: "Sun"},
-    view: {minViewSize: 20, borderColor: "ffff66", color: "ffffaa"}
-});
+const getNewSun = ():ViewableCelestialObject => {
+    const radius = random.float(0.3, 10) * rSun;
+    const mass = random.float(0.9, 1.1) * getMass(radius, dGasGiant);
+    return {
+        id: "sun",
+        attributes: {mass, radius, name: "Sun"},
+        view: {minViewSize: 20, borderColor: "ffff66", color: "ffffaa"}
+    };
+}
 
 const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCelestialObject[] => {
     const id = `Planet ${i + 1}`;
-    const mass = random.float(1, 5);
-    const a = sun.attributes.radius + 75 * (i + 1);
+    const isGasGiant = random.bool();
+    const radius = random.float(0.2, 2) * (isGasGiant ?  rJupiter : rEarth);
+    const mass = random.float(0.8, 1.2) * getMass(radius, isGasGiant ? dGasGiant : dRock);
+    const a = sun.attributes.radius + aEarth / 3 * (i + 1) * random.float(0.8, 1.2);
     const p:ViewableCelestialObject = {
         id,
-        attributes: {mass, radius: random.float(1, 5) * mass, name: id},
+        attributes: {mass, radius, name: id},
         orbit: {parent: sun, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
         view: {minViewSize: 10, borderColor: "6666ff", color: "aaaaff"}
     };
@@ -24,11 +34,12 @@ const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCelestialOb
     const bodies = [p];
     for(let j=0; j<moons; j++) {
         const moonId = `Planet ${i + 1}, Moon ${j + 1}`;
-        const moonMass = random.float(0.01 * mass, 0.2 * mass);
-        const a = p.attributes.radius + 7.5 * (i + 1);
+        const moonRadius = random.float(0.01, 0.3) * radius;
+        const moonMass = random.float(0.8, 1.2) * getMass(moonRadius, dRock);
+        const a = p.attributes.radius + sci(1, 6) * (i + 1) * random.float(0.8, 1.2);
         const m:ViewableCelestialObject = {
             id: moonId,
-            attributes: {mass: moonMass, radius: random.float(0.1, 0.5) * moonMass, name: moonId},
+            attributes: {mass: moonMass, radius: moonRadius, name: moonId},
             orbit: {parent: p, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
             view: {minViewSize: 1, borderColor: "66ff66", color: "aaffaa"}
         };
@@ -44,7 +55,6 @@ const shuffle = (seed:number, arr:ViewableCelestialObject[]):ViewableCelestialOb
     const aVal = random.int(0, 1000000);
     random.use(seedrandom(`${seed}:${b.id}`));
     const bVal = random.int(0, 1000000);
-    console.log(`a: ${a.id}:${aVal}, b: ${b.id}:${bVal}`);
     return aVal - bVal;
 });
 
@@ -73,12 +83,24 @@ export const resetLevel = (level:number) => {
     const target = planets[1];
 
     // TODO: Set the initial ship position and velocity around the start planet
+    const startPlanetPosition = getPosition(start, 0);
+    const orbitalHeight = start.attributes.radius * 1.2;
+    const initialPosition = {
+        x: startPlanetPosition.x,
+        y: startPlanetPosition.y + orbitalHeight,
+    }
+    const startPlanetVelocity = Vector.sub(getPosition(start, 1), startPlanetPosition);
+    const shipVelocity:IVector = Vector.add(startPlanetVelocity, {
+        x: orbitalSpeed(start.attributes.mass, orbitalHeight),
+        y: 0
+    });
+
     const newShip = {
-        initialPosition: {x: 0, y:100},
-        initialVelocity: {x: 1, y:0},
-        position: {x: 0, y: 100},
-        velocity: {x: 1, y: 0},
+        initialPosition,
+        initialVelocity: shipVelocity,
+        position: initialPosition,
+        velocity: shipVelocity,
     };
     
-    return {planets, newShip, start, target};
+    return {planets, newShip, startId: start.id, targetId: target.id};
 }

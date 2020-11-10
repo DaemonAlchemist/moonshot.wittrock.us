@@ -1,37 +1,39 @@
-import { IShip, ICelestialBody, IDeltaV, IPosition } from "../../util/sim";
-import { getPosition, G } from "../../util/orbit";
+import { IShip, ICelestialBody, IDeltaV, IVector, ITimer } from "../../util/sim";
+import { getPosition } from "../../util/orbit";
+import { G } from "../../util/constants";
+import { Vector } from "../../util/vector";
 
-export const tick = (ship:IShip, planets:ICelestialBody[], deltaVs:IDeltaV[], baseTime:number, steps:number):IShip => {
+const gravityForce = (position:IVector, planets:ICelestialBody[], t:number) => {
+    return planets.reduce((totalForce:IVector, p:ICelestialBody):IVector => {
+        // Add force from planets to velocity
+        const pPos = getPosition(p, t);
+        const dir = Vector.sub(pPos, position);
+        const l = Vector.len(dir);
+
+        const f = G * p.attributes.mass / (l*l);
+        return Vector.apply((t, d) => t + f * d / l, totalForce, dir);
+    }, {x: 0, y: 0});
+
+}
+
+export const tick = (ship:IShip, planets:ICelestialBody[], deltaVs:IDeltaV[], timer:ITimer):IShip => {
+        const startTime = Date.now();
         let position = {...ship.position};
         let velocity = {...ship.velocity};
+        const dT = timer.dT;
 
-        for(let i=0; i<steps; i++) {
-            const time = baseTime + i;
+        for(let i=0; i<Math.max(1, timer.steps); i++) {
+            const time = timer.time + i * dT;
 
             // Add the gravitational forces from the planets
-            const force = planets.reduce((totalForce:IPosition, p:ICelestialBody):IPosition => {
-                // Add force from planets to velocity
-                const pPos = getPosition(p, time);
-                const dir:IPosition = {
-                    x: pPos.x - position.x,
-                    y: pPos.y - position.y,
-                };
-                const d = Math.sqrt(dir.x * dir.x + dir.y * dir.y);
-
-                const f = G * p.attributes.mass / (d*d);
-                return {
-                    x: totalForce.x + f * dir.x / d,
-                    y: totalForce.y + f * dir.y / d,
-                }
-            }, {x: 0, y: 0});
+            const force = gravityForce(position, planets, time);
 
             // Update the ship's position based on last velocity
-            position.x += velocity.x + force.x / 2;
-            position.y += velocity.y + force.x / 2;
+            position = Vector.apply((p, v, f) => p + v * dT + f / 2 * dT * dT, position, velocity, force);
 
             // Update velocity based on current forces
-            velocity.x += force.x;
-            velocity.y += force.y;
+            velocity = Vector.apply((v, f) => v + f * dT, velocity, force);
+
 
             // Update velocity with any delta-Vs
             const matchingDeltaV = deltaVs.filter(d => d.time === time);
@@ -41,6 +43,8 @@ export const tick = (ship:IShip, planets:ICelestialBody[], deltaVs:IDeltaV[], ba
                 velocity.y += deltaV.deltaV * Math.sin(deltaV.angle);
             }
         }
+
+        const endTime = Date.now();
 
         // Update ship with new position and velocity
         return {...ship, position, velocity};

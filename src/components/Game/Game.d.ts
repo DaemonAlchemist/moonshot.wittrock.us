@@ -1,4 +1,4 @@
-import { ITimer, IDeltaV, IShip } from "../../util/sim";
+import { ITimer, IDeltaV, IShip, IGame } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
 export declare interface IGameProps {
@@ -11,6 +11,7 @@ export declare interface IGameStateProps {
     deltaVs: IDeltaV[];
     ship:IShip;
     planets:ViewableCelestialObject[];
+    game: IGame;
 }
 
 // What gets returned from the second connect function (mapDispatchToProps)

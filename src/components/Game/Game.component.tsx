@@ -8,12 +8,13 @@ import { useTimer } from '../../util/useTimer';
 import { Viewport } from '../Viewport';
 import { GameProps } from "./Game.d";
 import './Game.less';
+import { tickInterval, baseSpeed, zoomSpeed } from "../../util/constants";
 
 export const GameComponent = (props:GameProps) => {
     const {resetLevel, tick} = props;
 
     const [isRunning, start, stop] = useTimer({
-        interval: 5,
+        interval: tickInterval,
         onTick: tick,
         isRunning: true,
     });
@@ -51,12 +52,13 @@ export const GameComponent = (props:GameProps) => {
 
             <div id="time-controls">
                 <h1 className="time">Time: {props.timer.time}</h1>
-                <h1 className="speed">Speed: {props.timer.speed}</h1>
+                <h1 className="speed">Speed: {props.timer.steps * baseSpeed} ({props.timer.steps} X {baseSpeed})</h1>
                 <Icon icon={faFastBackward} title="Reset level" onClick={reset}/>
-                <Icon icon={faBackward} onClick={props.timer.speed > 1 ? props.updateSpeed(props.timer.speed / 2) : undefined} />
+                <Icon icon={faBackward} onClick={props.timer.steps > 1 ? props.updateSpeed(props.timer.steps / 2) : undefined} />
                 {isRunning && <Icon icon={faPause} title="Pause" onClick={stop} />}
                 {!isRunning && <Icon icon={faPlay} title="Play" onClick={start} />}
-                <Icon icon={faForward} onClick={props.updateSpeed(props.timer.speed * 2)} />
+                <Icon icon={faForward} onClick={ props.timer.steps < 1024 ? props.updateSpeed(props.timer.steps * 2) : undefined} />
+                <Icon icon={faStepForward} onClick={props.tick} />
             </div>
             <hr />
 
@@ -71,9 +73,23 @@ export const GameComponent = (props:GameProps) => {
             <Button onClick={props.addDeltaV(props.timer.time)}><PlusOutlined /> Add delta-V</Button>
         </Layout.Sider>
         <Layout.Content className="viewports">
-            <Viewport name="Start" className="start-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
+            <Viewport
+                name="Start"
+                className="start-viewport inset-viewport"
+                center={{x: 0, y: 0}}
+                zoom={Math.pow(zoomSpeed,50)}
+                reset={resetTrigger}
+                initialSelectedPlanetId={props.game.startId}
+            />
             <Viewport name="System overview" className="main-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
-            <Viewport name="Target" className="end-viewport inset-viewport" center={{x: 0, y: 0}} zoom={1} reset={resetTrigger} />
+            <Viewport
+                name="Target"
+                className="end-viewport inset-viewport"
+                center={{x: 0, y: 0}}
+                zoom={Math.pow(zoomSpeed, 50)}
+                reset={resetTrigger}
+                initialSelectedPlanetId={props.game.targetId}
+            />
         </Layout.Content>
     </Layout>;
 }

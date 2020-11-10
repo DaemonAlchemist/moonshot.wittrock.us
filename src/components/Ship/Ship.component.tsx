@@ -2,11 +2,11 @@ import { faRocket, faFireAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import * as React from 'react';
 import { abs2scr } from '../../util/orbit';
-import { IPosition, IShip } from '../../util/sim';
+import { IVector, IShip } from '../../util/sim';
 import { ShipProps } from "./Ship.d";
 import './Ship.less';
 
-const getShipStyle = (ship:IShip, offset:IPosition, zoom:number, angle:number):React.CSSProperties => {
+const getShipStyle = (ship:IShip, offset:IVector, zoom:number, angle:number):React.CSSProperties => {
     const scrPos = abs2scr(ship.position, offset, zoom);
     const data = {
         left: `${scrPos.x - 10}px`,

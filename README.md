@@ -21,8 +21,10 @@ Update UX
     - Add player name input
     - Add high score list component
     - Add load from high score list control
+    - When not near a burn, face rocket in direction of travel
 
 Bugs
+    - Zoom broken when selecting a planet
     - Completely broken in Firefox
 
 Backend

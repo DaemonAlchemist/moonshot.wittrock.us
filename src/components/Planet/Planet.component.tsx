@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { abs2scr, getPosition } from '../../util/orbit';
-import { IPosition, ViewableCelestialObject } from '../../util/sim';
+import { IVector, ViewableCelestialObject } from '../../util/sim';
 import { PlanetProps } from "./Planet.d";
 import './Planet.less';
 
-const getContainerStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition, zoom:number):React.CSSProperties => {
+const getContainerStyle = (planet:ViewableCelestialObject, t:number, offset:IVector, zoom:number):React.CSSProperties => {
     const position = getPosition(planet, t);
     const scrPos = abs2scr(position, offset, zoom);
     const displayRadius = Math.max(planet.view.minViewSize , planet.attributes.radius * 2 * zoom);
@@ -32,7 +32,7 @@ const getPlanetStyle = (planet:ViewableCelestialObject, zoom:number):React.CSSPr
     return data;
 }
 
-const getDotStyle = (planet:ViewableCelestialObject, t:number, offset:IPosition, zoom:number):React.CSSProperties => {
+const getDotStyle = (planet:ViewableCelestialObject, t:number, offset:IVector, zoom:number):React.CSSProperties => {
     const position = getPosition(planet, t);
     const scrPos = abs2scr(position, offset, zoom);
     const data = {

@@ -1,15 +1,19 @@
 import * as React from 'react';
-import { IPosition } from '../../util/sim';
+import { zoomSpeed } from '../../util/constants';
+import { getPosition } from '../../util/orbit';
+import { IVector } from '../../util/sim';
+import { Vector } from '../../util/vector';
 import { Planet } from '../Planet';
 import { Ship } from '../Ship';
 import { ViewportProps } from "./Viewport.d";
 import './Viewport.less';
-import { getPosition } from '../../util/orbit';
+
+const zoomMul = 0.000000001;
 
 export const ViewportComponent = (props:ViewportProps) => {
-    const [offset, setOffset] = React.useState<IPosition>({x: 0, y: 0});
-    const [size, setSize] = React.useState<IPosition>({x: 0, y: 0});
-    const [center, setCenter] = React.useState<IPosition>(props.center);
+    const [offset, setOffset] = React.useState<IVector>({x: 0, y: 0});
+    const [size, setSize] = React.useState<IVector>({x: 0, y: 0});
+    const [center, setCenter] = React.useState<IVector>(props.center);
 
     const ref = React.createRef<HTMLDivElement>();
     React.useEffect(() => {
@@ -27,15 +31,15 @@ export const ViewportComponent = (props:ViewportProps) => {
     const stopDragging = () => {setDragging(false);}
     const drag = (e:React.MouseEvent) => {
         if(dragging) {
-            setCenter({
+            const newCenter = {
                 x: center.x - e.movementX / zoom,
                 y: center.y - e.movementY / zoom,
-            });
+            };
+            setCenter(newCenter);
         }
     }
 
     const [zoom, setZoom] = React.useState(props.zoom);
-    const zoomSpeed = 1.2;
     const onZoom = (e:React.WheelEvent) => {
         const up = e.deltaY > 0;
         const mul = up ? 1/zoomSpeed : zoomSpeed;
@@ -49,19 +53,22 @@ export const ViewportComponent = (props:ViewportProps) => {
         })
     }, [size, center, zoom]);
 
-    const [selectedPlanet, setSelectedPlanet] = React.useState("");
+    const [selectedPlanet, setSelectedPlanet] = React.useState(props.initialSelectedPlanetId || "");
+    console.log(selectedPlanet);
     const updateSelectedPlanet = (id:string) => {
         setSelectedPlanet(id === selectedPlanet ? "" : id);
     }
-    const selectedPlanetCenter = !!selectedPlanet ? getPosition(props.planets.filter((p => p.id === selectedPlanet))[0], props.time) : null;
-    if(selectedPlanetCenter) {
-        if(selectedPlanetCenter.x !== center.x || selectedPlanetCenter.y !== center.y) {setCenter(selectedPlanetCenter);}
-    }
+    React.useEffect(() => {
+        const selectedPlanetCenter = !!selectedPlanet ? Vector.mul(zoomMul, getPosition(props.planets.filter((p => p.id === selectedPlanet))[0], props.time)) : null;
+        if(selectedPlanetCenter) {
+            setCenter(selectedPlanetCenter);
+        }
+    }, [props.initialSelectedPlanetId, selectedPlanet, props.planets]);
 
     const initialCenter = React.useRef(props.center);
     React.useEffect(() => {
-        setSelectedPlanet("");
-        setZoom(1);
+        setSelectedPlanet(props.initialSelectedPlanetId || "");
+        setZoom(props.zoom);
         setCenter(initialCenter.current);
     }, []);
 
@@ -81,9 +88,9 @@ export const ViewportComponent = (props:ViewportProps) => {
             onMouseMove={drag}
             onWheel={onZoom}
         >
-            <Ship zoom={zoom} offset={offset} />
+            <Ship zoom={zoom * zoomMul} offset={offset} />
             {props.planets.map(planet =>
-                <Planet key={planet.id} {...planet} zoom={zoom} offset={offset} onClick={updateSelectedPlanet} />
+                <Planet key={planet.id} {...planet} zoom={zoom * zoomMul} offset={offset} onClick={updateSelectedPlanet} />
             )}
         </div>
     </div>;

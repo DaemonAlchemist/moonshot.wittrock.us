@@ -7,6 +7,7 @@ export declare interface IViewportProps {
     zoom:number;
     reset:boolean;
     name: string;
+    initialSelectedPlanetId?:string;
 }
 
 // What gets returned from the first connect function (mapStateToProps)

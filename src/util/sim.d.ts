@@ -1,19 +1,25 @@
 
-export declare interface IPosition {
+export declare interface IVector {
     x:number;
     y:number;
 }
 
 export declare interface ITimer {
     time: number;
-    speed: number;
+    steps: number;
+    dT: number;
 }
 
 export declare interface IShip {
-    position: IPosition;
-    velocity: IPosition;
-    initialPosition: IPosition;
-    initialVelocity: IPosition;
+    position: IVector;
+    velocity: IVector;
+    initialPosition: IVector;
+    initialVelocity: IVector;
+}
+
+export declare interface IGame {
+    startId:string;
+    targetId:string;
 }
 
 export declare interface IDeltaV {
@@ -66,7 +72,7 @@ export declare interface ITimeable {
 }
 
 export declare interface IOffsetable {
-    offset:IPosition;
+    offset:IVector;
 }
 
 export declare type ViewableCelestialObject = ICelestialBody & IViewable;

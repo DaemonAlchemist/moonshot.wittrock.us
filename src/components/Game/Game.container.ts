@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { memoize } from 'ts-functional';
-import { deltaV, planet, ship, timer } from '../../util/redux';
+import { dT } from '../../util/constants';
+import { deltaV, game, planet, ship, timer } from '../../util/redux';
 import { resetLevel } from '../../util/resetLevel';
 import { IShip } from '../../util/sim';
 import { tick } from '../Ship/Ship.helpers';
@@ -9,6 +10,7 @@ import { GameProps, IGameDispatchProps, IGameProps, IGameStateProps } from "./Ga
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IGameProps):IGameStateProps => ({
+    game: game.get(state),
     timer: timer.get(state),
     deltaVs: deltaV.getMultiple(state, () => true).sort((a, b) => a.time - b.time),
     ship: ship.get(state),
@@ -30,24 +32,20 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         dispatch(deltaV.delete(id));
     },
     resetLevel:memoize(() => (level:number) => {
-        const {planets, newShip, start, target} = resetLevel(level);
-
-        console.log("Starting planet");
-        console.log(start);
-        console.log("Target planet");
-        console.log(target);
+        const {planets, newShip, startId, targetId} = resetLevel(level);
 
         // Clear and reset the old level
-        dispatch(timer.update({time: 0}));
+        dispatch(timer.update({time: 0, steps: 1, dT}));
         dispatch(planet.clear());
         dispatch(planet.addMultiple(planets));
         dispatch(ship.update(newShip));
+        dispatch(game.update({startId, targetId}));
     }, {})(),
     updateShip: (s:Partial<IShip>) => {
         dispatch(ship.update(s));
     },
-    updateSpeed: (speed:number) => () => {
-        dispatch(timer.update({speed}));
+    updateSpeed: (steps:number) => () => {
+        dispatch(timer.update({steps}));
     },
     updateTime: (time:number) => {
         dispatch(timer.update({time}));
@@ -60,8 +58,9 @@ export const mergeProps = (state:IGameStateProps, dispatch:IGameDispatchProps, p
     ...dispatch,
     ...props,
     tick: () => {
-        dispatch.updateTime(state.timer.time + state.timer.speed);
-        dispatch.updateShip(tick(state.ship, state.planets, state.deltaVs, state.timer.time, state.timer.speed));
+        const newShip = tick(state.ship, state.planets, state.deltaVs, state.timer);
+        dispatch.updateTime(state.timer.time + state.timer.steps * state.timer.dT);
+        dispatch.updateShip(newShip);
     }
 });
 
