@@ -36,34 +36,27 @@ const add = (a:number, b:number) => Math.pow(10, Math.log10(a))
 
 // Source: https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion#Position_as_a_function_of_time
 // TODO:  Memoize this based on planet object id and t if performance becomes an issue
-const _getPosition = (planet:ICelestialBody, t:number):IVector => {
+const _getPosition = memoize((planet:ICelestialBody, t:number):IVector => {
     if(typeof planet.orbit === "undefined") {
         // There is only one sun:  the "planet" without an orbit
         return {x:0, y:0};
     } else {
         const s = planet as ISatellite;
 
-        const p = period(s);
-        const n = 2*Math.PI / p;
-        let M = n * t + s.orbit.v0;
-        const M0 = M;
+        let M = (s.orbit.n || 1) * t + s.orbit.v0;
         if(M > Math.PI) {M = M - Math.floor(Math.PI / M) * Math.PI;}
         const f = (E:number) => E - s.orbit.e * Math.sin(E) - M;
         const E = solve(f, {max: M, min: M/2});
-
-        const sinV = Math.sqrt(1 - s.orbit.e * s.orbit.e) * Math.sin(E);
-        const cosV = Math.cos(E) - s.orbit.e;
-        const v = Math.atan2(sinV, cosV);
 
         const r = s.orbit.a * (1 - s.orbit.e * Math.cos(E));
 
         const parentPos = getPosition(s.orbit.parent, t);
         return {
-            x: parentPos.x - r * Math.cos(v),
-            y: parentPos.y + r * Math.sin(v),
+            x: parentPos.x - r * (Math.cos(E) - s.orbit.e),
+            y: parentPos.y + r * (Math.sqrt(1 - s.orbit.e * s.orbit.e) * Math.sin(E)),
         };
     }
-}
+}, {keyGen: ([p, t]) => `${objectId(p)}:${t}`});
 
 export const getPosition = memoize(
     _getPosition,

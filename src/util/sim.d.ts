@@ -47,6 +47,8 @@ export declare interface IOrbit {
     a: number;
     w: number;
     v0: number;
+    period?: number;
+    n?:number;
 }
 
 export declare interface ICelestialBody {

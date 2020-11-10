@@ -1,7 +1,7 @@
 import random from 'random';
 import seedrandom from 'seedrandom';
-import { ViewableCelestialObject, IVector } from "./sim";
-import { getPosition } from './orbit';
+import { ViewableCelestialObject, IVector, ISatellite } from "./sim";
+import { getPosition, period } from './orbit';
 import { rSun, dGasGiant, rJupiter, rEarth, dRock, aEarth } from './constants';
 import { getMass, sci, orbitalSpeed } from './util';
 import { Vector } from './vector';
@@ -28,6 +28,8 @@ const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCelestialOb
         orbit: {parent: sun, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
         view: {minViewSize: 10, borderColor: "6666ff", color: "aaaaff"}
     };
+    (p as ISatellite).orbit.period = period(p as ISatellite);
+    (p as ISatellite).orbit.n = 2 * Math.PI / period(p as ISatellite);
 
     const moons:number = random.int(0, 3);
 
@@ -43,6 +45,8 @@ const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCelestialOb
             orbit: {parent: p, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
             view: {minViewSize: 1, borderColor: "66ff66", color: "aaffaa"}
         };
+        (m as ISatellite).orbit.period = period(m as ISatellite);
+        (m as ISatellite).orbit.n = 2 * Math.PI / period(m as ISatellite);
         bodies.push(m);
     }
 
