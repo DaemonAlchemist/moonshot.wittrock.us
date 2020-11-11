@@ -1,14 +1,14 @@
 import { CloseCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { faBackward, faFastBackward, faForward, faMoon, faPause, faPlay, faStepBackward, faStepForward, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faBackward, faFastBackward, faForward, faMoon, faPause, faPlay, faRocket, faStepBackward, faStepForward } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import { Button, InputNumber, Layout, Slider, Table } from 'antd';
 import * as React from 'react';
+import { dT, tickInterval, zoomSpeed } from "../../util/constants";
 import { IDeltaV } from "../../util/sim";
 import { useTimer } from '../../util/useTimer';
 import { Viewport } from '../Viewport';
 import { GameProps } from "./Game.d";
 import './Game.less';
-import { tickInterval, baseSpeed, zoomSpeed, dT } from "../../util/constants";
 
 export const GameComponent = (props:GameProps) => {
     const {resetLevel, tick} = props;
@@ -49,14 +49,16 @@ export const GameComponent = (props:GameProps) => {
 
     return <Layout>
         <Layout.Sider width="400px">
-            <h1><Icon icon={faMoon} /> MoonShot <Icon icon={faMoon} /></h1>
+            <h1 className="game-title"><Icon icon={faMoon} /> MoonShot <Icon icon={faMoon} /></h1>
             <hr />
 
             <div id="level-controls">
                 <h1>Level</h1>
-                <Icon icon={faStepBackward} title="Previous level" onClick={level > 1 ? changeLevel(level - 1) : undefined} />
-                <span className="curLevel">{level}</span>
-                <Icon icon={faStepForward} title="Next level" onClick={changeLevel(level + 1)} />
+                <div>
+                    <Icon icon={faStepBackward} title="Previous level" onClick={level > 1 ? changeLevel(level - 1) : undefined} />
+                    <span className="curLevel">{level}</span>
+                    <Icon icon={faStepForward} title="Next level" onClick={changeLevel(level + 1)} />
+                </div>
             </div>
             <hr />
 
@@ -64,11 +66,11 @@ export const GameComponent = (props:GameProps) => {
                 <h1 className="time">Time: {time(props.timer.time)}</h1>
                 <h1 className="speed">Speedup: {props.timer.steps}</h1>
                 <Icon icon={faFastBackward} title="Reset level" onClick={reset}/>
-                <Icon icon={faBackward} onClick={props.timer.steps > 1 ? props.updateSpeed(props.timer.steps / 2) : undefined} />
+                <Icon icon={faBackward} title="Slower" onClick={props.timer.steps > 1 ? props.updateSpeed(props.timer.steps / 2) : undefined} />
                 {isRunning && <Icon icon={faPause} title="Pause" onClick={stop} />}
                 {!isRunning && <Icon icon={faPlay} title="Play" onClick={start} />}
-                <Icon icon={faForward} onClick={ props.timer.steps < 1024 ? props.updateSpeed(props.timer.steps * 2) : undefined} />
-                <Icon icon={faStepForward} onClick={props.tick} />
+                <Icon icon={faForward} title="Faster" onClick={ props.timer.steps < 1024 ? props.updateSpeed(props.timer.steps * 2) : undefined} />
+                <Icon icon={faStepForward} title="Step forward" onClick={props.tick} />
             </div>
             <hr />
 
@@ -81,6 +83,10 @@ export const GameComponent = (props:GameProps) => {
                 <Table.Column dataIndex="id" render={actions} width="25px" />
             </Table>
             <Button onClick={props.addDeltaV(props.timer.time)}><PlusOutlined /> Add delta-V</Button>
+
+            <hr/>
+
+            <h1>High Scores for Level {level}</h1>
         </Layout.Sider>
         <Layout.Content className="viewports">
             <Viewport

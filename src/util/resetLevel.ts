@@ -38,7 +38,7 @@ const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCelestialOb
         const moonId = `Planet ${i + 1}, Moon ${j + 1}`;
         const moonRadius = random.float(0.01, 0.3) * radius;
         const moonMass = random.float(0.8, 1.2) * getMass(moonRadius, dRock);
-        const a = p.attributes.radius + sci(1, 6) * (i + 1) * random.float(0.8, 1.2);
+        const a = p.attributes.radius + sci(1, 7) * (i + 1) * random.float(0.8, 1.2);
         const m:ViewableCelestialObject = {
             id: moonId,
             attributes: {mass: moonMass, radius: moonRadius, name: moonId},

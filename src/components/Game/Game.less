@@ -17,13 +17,24 @@
         color: @textColor;
         text-align: center;
     }
+    h1.game-title {
+        font-size: 48px;
+        margin: 0 0 -8px 0;
+        padding: 0;
+    }
     #level-controls {
         position: relative;
-        padding-top: @controlSize;
+        padding-top: 0;
+        margin: -8px 0 28px 0;
+        height: @controlSize;
         h1 {
-            position: absolute;
-            top: 0px;
-            left: 8px;
+            float: left;
+            font-size: 48px;
+            padding-left: 16px;
+        }
+        > div {
+            float: right;
+            padding: 4px 8px 0 0;
         }
         svg {.iconControl();}
     }

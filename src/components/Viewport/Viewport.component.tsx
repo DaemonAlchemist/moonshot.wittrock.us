@@ -7,6 +7,7 @@ import { Planet } from '../Planet';
 import { Ship } from '../Ship';
 import { ViewportProps } from "./Viewport.d";
 import './Viewport.less';
+import { lengthDisplay } from '../../util/util';
 
 const zoomMul = 0.000000001;
 
@@ -54,27 +55,32 @@ export const ViewportComponent = (props:ViewportProps) => {
     }, [size, center, zoom]);
 
     const [selectedPlanet, setSelectedPlanet] = React.useState(props.initialSelectedPlanetId || "");
-    console.log(selectedPlanet);
     const updateSelectedPlanet = (id:string) => {
         setSelectedPlanet(id === selectedPlanet ? "" : id);
     }
+    const [distance, setDistance] = React.useState<number | undefined>(undefined);
     React.useEffect(() => {
-        const selectedPlanetCenter = !!selectedPlanet ? Vector.mul(zoomMul, getPosition(props.planets.filter((p => p.id === selectedPlanet))[0], props.time)) : null;
-        if(selectedPlanetCenter) {
+        setDistance(undefined);
+        if(selectedPlanet) {
+            const planet = props.planets.filter((p => p.id === selectedPlanet))[0];
+            const planetPos = getPosition(planet, props.time);
+            const selectedPlanetCenter = Vector.mul(zoomMul, planetPos);
             setCenter(selectedPlanetCenter);
+            setDistance(Vector.len(Vector.sub(planetPos, props.ship.position)) - planet.attributes.radius);
         }
-    }, [props.initialSelectedPlanetId, selectedPlanet, props.planets]);
+    }, [props.initialSelectedPlanetId, selectedPlanet, props.planets, props.ship.position, props.time]);
 
     const initialCenter = React.useRef(props.center);
     React.useEffect(() => {
         setSelectedPlanet(props.initialSelectedPlanetId || "");
         setZoom(props.zoom);
         setCenter(initialCenter.current);
-    }, []);
+    }, [props.initialSelectedPlanetId, props.zoom]);
 
     return <div className={`viewport-container ${props.className}`}>
         <div className="viewport-zoom">
             {!!selectedPlanet ? `${selectedPlanet} - ` : ""} Zoom: {zoom.toFixed(1)}
+            {!!distance && <><br/>{lengthDisplay(distance)}</>}
         </div>
         <div className="viewport-name">
             {props.name}

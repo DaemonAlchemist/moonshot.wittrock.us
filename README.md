@@ -1,18 +1,8 @@
 MoonShot ToDo
 =============
-Add start/target handling
-    - Tweak level generation parameters
-        - Planet sizes and orbit parameters
-        - Moon sizes and orbit parameters
-    - Pick a starting orbit
-    - Pick a target (circular) orbit
-    - Place rocket around starting planet in starting orbit
-    - Track starting planet in "Start" viewport
-    - Track target planet in "Target" viewport
-
 Update game logic
-    - Crash handling:  If rocket is closer to a planet than it's radius, crash and end game
-    - Win handling:  If rocket is closer to target planet than the target orbit
+    - Crash handling:  If rocket is closer to a non-target planet than it's radius, crash and end game
+    - Win handling:  If rocket is closer to target planet than the target orbit (1.2 radius)
         - Calculate delta-V needed to enter target orbit
         - Add up total delta-V values (user-defined and final delta-V) to get score
         - Show upload to high score list modal
@@ -21,11 +11,17 @@ Update UX
     - Add player name input
     - Add high score list component
     - Add load from high score list control
+
+Extra UX
+    - Add rewind feature
     - When not near a burn, face rocket in direction of travel
+    - Add ship travel dots
+        - when viewport is tracking a planet, dot locations should be relative to the planet's location at that time.
 
 Bugs
-    - Zoom broken when selecting a planet
-    - Completely broken in Firefox
+    - Make sure orbits are reasonable
+    - w orbit parameter does not appear to be working (scale?)
+    - Burn duration needs tweaking
 
 Backend
     - Setup dynamoDB tables to record high scores

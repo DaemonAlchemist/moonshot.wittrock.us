@@ -32,8 +32,6 @@ export const solve = (f:(n:number) => number, options:ISolverOptions) => {
     return (curMin + curMax) / 2;
 }
 
-const add = (a:number, b:number) => Math.pow(10, Math.log10(a))
-
 // Source: https://en.wikipedia.org/wiki/Kepler%27s_laws_of_planetary_motion#Position_as_a_function_of_time
 // TODO:  Memoize this based on planet object id and t if performance becomes an issue
 const _getPosition = memoize((planet:ICelestialBody, t:number):IVector => {

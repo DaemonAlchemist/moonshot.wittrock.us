@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import { first, last } from 'ts-functional';
+import { baseSpeed } from '../../util/constants';
 import { deltaV, ship, timer } from '../../util/redux';
 import { IShip } from '../../util/sim';
 import { ShipComponent } from './Ship.component';
 import { IShipDispatchProps, IShipProps, IShipStateProps, ShipProps } from "./Ship.d";
-import { dT, baseSpeed } from '../../util/constants';
 
 // The mapStateToProps function:  Use this to fetch data from the Redux store via selectors
 export const mapStateToProps = (state:any, props:IShipProps):IShipStateProps => ({
