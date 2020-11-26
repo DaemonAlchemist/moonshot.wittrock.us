@@ -1,0 +1,114 @@
+{
+  "service": "api-moonshot-wittrock-us",
+  "provider": {
+    "name": "aws",
+    "runtime": "nodejs10.x"
+  },
+  "custom": {
+    "dynamodb": {
+      "start": {
+        "migrate": true,
+        "sharedDb": true
+      },
+      "stages": [
+        "dev"
+      ]
+    },
+    "serverless-offline": {
+      "port": 3001
+    }
+  },
+  "functions": [
+    {
+      "POSTmoonshotpostInit": {
+        "handler": "index.srcmoonshothandlerpostInit",
+        "events": [
+          {
+            "http": {
+              "path": "/moonshot/init",
+              "method": "POST",
+              "cors": true
+            }
+          }
+        ],
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "POSTmoonshotpostValidate": {
+        "handler": "index.srcmoonshothandlerpostValidate",
+        "events": [
+          {
+            "http": {
+              "path": "/moonshot/validate",
+              "method": "POST",
+              "cors": true
+            }
+          }
+        ],
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "POSTmoonshotpostHighScore": {
+        "handler": "index.srcmoonshothandlerpostHighScore",
+        "events": [
+          {
+            "http": {
+              "path": "/moonshot/high-score",
+              "method": "POST",
+              "cors": true
+            }
+          }
+        ],
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          }
+        ]
+      }
+    },
+    {
+      "GETmoonshotgetHighScores": {
+        "handler": "index.srcmoonshothandlergetHighScores",
+        "events": [
+          {
+            "http": {
+              "path": "/moonshot/high-score",
+              "method": "GET",
+              "cors": true
+            }
+          }
+        ],
+        "iamRoleStatements": [
+          {
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+          }
+        ]
+      }
+    }
+  ],
+  "plugins": [
+    "serverless-dynamodb-local",
+    "serverless-offline",
+    "serverless-plugin-typescript",
+    "serverless-dotenv-plugin",
+    "serverless-iam-roles-per-function"
+  ]
+}
