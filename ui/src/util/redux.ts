@@ -47,7 +47,7 @@ export const ship:Singleton<IShip, {}> = singleton<IShip>(shipDef);
 const gameDef:ISingletonDefinition<IGame, {}> = {
     module: "moonshot",
     entity: "game",
-    default: {startId: "", targetId: ""}
+    default: {startId: "", targetId: "", status: "playing"}
 }
 export const game:Singleton<IGame, {}> = singleton<IGame>(gameDef);
 

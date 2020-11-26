@@ -17,9 +17,12 @@ export declare interface IShip {
     initialVelocity: IVector;
 }
 
+export declare type Status = "playing" | "dead" | "won";
+
 export declare interface IGame {
     startId:string;
     targetId:string;
+    status: Status;
 }
 
 export declare interface IDeltaV {

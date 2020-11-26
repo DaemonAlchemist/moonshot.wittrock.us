@@ -25,6 +25,9 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
     addDeltaV: (time:number) => () => {
         dispatch(deltaV.add({id: getId(), time, deltaV: 0, angle: 0}));
     },
+    lose: () => {
+        dispatch(game.update({status: "dead"}));
+    },
     onChangeDeltaV: (id:string, field:string) => (value?:string | number) => {
         dispatch(deltaV.update({id, [field]: value ? +value : 0}));
     },
@@ -39,7 +42,7 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
         dispatch(planet.clear());
         dispatch(planet.addMultiple(planets));
         dispatch(ship.update(newShip));
-        dispatch(game.update({startId, targetId}));
+        dispatch(game.update({startId, targetId, status: "playing"}));
     }, {})(),
     updateShip: (s:Partial<IShip>) => {
         dispatch(ship.update(s));
@@ -50,6 +53,9 @@ export const mapDispatchToProps = (dispatch:any, props:IGameProps):IGameDispatch
     updateTime: (time:number) => {
         dispatch(timer.update({time}));
     },
+    win: () => {
+        dispatch(game.update({status: "won"}));
+    },
 });
 
 // The mergeProps function:  Use this to define handlers and dispatchers that require access to state props
@@ -58,8 +64,16 @@ export const mergeProps = (state:IGameStateProps, dispatch:IGameDispatchProps, p
     ...dispatch,
     ...props,
     tick: () => {
-        const newShip = tick(state.ship, state.planets, state.deltaVs, state.timer);
-        dispatch.updateTime(state.timer.time + state.timer.steps * state.timer.dT);
+        // Don't tick if the game is over
+        if(["dead", "won"].includes(state.game.status)) {return;}
+
+        const {newShip, newStatus, finalTime} = tick(state.ship, state.planets, state.deltaVs, state.timer, state.game.targetId);
+        switch(newStatus) {
+            case "dead": dispatch.lose(); break;
+            case "won": dispatch.win(); break;
+        }
+        
+        dispatch.updateTime(finalTime);
         dispatch.updateShip(newShip);
     }
 });

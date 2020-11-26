@@ -1,7 +1,7 @@
 import { objectId } from "the-reducer";
 import { memoize } from "ts-functional";
 import { G } from "./constants";
-import { ICelestialBody, IVector, ISatellite, ISolverOptions } from "./sim";
+import { ICelestialBody, IVector, ISatellite, ISolverOptions, IShip } from "./sim";
 import { Vector } from "./vector";
 
 const GPrime = 2*Math.PI / Math.sqrt(G);
@@ -9,6 +9,9 @@ const GPrime = 2*Math.PI / Math.sqrt(G);
 export const period = (p:ISatellite):number => GPrime * Math.sqrt(p.orbit.a * p.orbit.a * p.orbit.a / p.orbit.parent.attributes.mass);
 
 export const abs2scr = (position:IVector, offset:IVector, zoom:number):IVector => Vector.apply((p, o) => o + p*zoom, position, offset);
+
+export const getDistance = (ship:IShip, planet:ICelestialBody, t:number) =>
+    Vector.len(Vector.sub(getPosition(planet, t), ship.position)) - planet.attributes.radius;
 
 // Solve an equation y = f(x) for x given a target y value via successive approximations
 export const solve = (f:(n:number) => number, options:ISolverOptions) => {

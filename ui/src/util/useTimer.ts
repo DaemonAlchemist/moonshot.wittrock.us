@@ -23,7 +23,7 @@ export const useTimer = (options:IUseTimerOptions):[boolean, () => void, () => v
         if(isRunning) {
             onTick();
         }
-    }, [isRunning, onTick, ]);
+    }, [isRunning, onTick]);
 
     React.useEffect(() => {
         const timer = window.setInterval(tick, interval);

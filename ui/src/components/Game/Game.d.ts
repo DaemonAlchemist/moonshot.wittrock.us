@@ -1,4 +1,4 @@
-import { ITimer, IDeltaV, IShip, IGame } from "../../util/sim";
+import { ITimer, IDeltaV, IShip, IGame, ViewableCelestialObject } from "../../util/sim";
 
 // What gets passed into the component from the parent as attributes
 export declare interface IGameProps {
@@ -23,6 +23,8 @@ export declare interface IGameDispatchProps {
     onChangeDeltaV: (id:string, field:string) => (value?:string | number) => void;
     onDeleteDeltaV: (id:string) => () => void;
     updateSpeed: (speed:number) => () => void;
+    win: () => void;
+    lose: () => void;
 }
 
 // What gets added in the third connect function (mergeProps)

@@ -1,5 +1,5 @@
-import { IShip, ICelestialBody, IDeltaV, IVector, ITimer } from "../../util/sim";
-import { getPosition } from "../../util/orbit";
+import { IShip, ICelestialBody, IDeltaV, IVector, ITimer, Status } from "../../util/sim";
+import { getPosition, getDistance } from "../../util/orbit";
 import { G } from "../../util/constants";
 import { Vector } from "../../util/vector";
 
@@ -37,13 +37,22 @@ const rk4 = (p0:IVector, v0:IVector, planets:ICelestialBody[], t:number, dT:numb
     return [pNext, vNext];
 }
 
-export const tick = (ship:IShip, planets:ICelestialBody[], deltaVs:IDeltaV[], timer:ITimer):IShip => {
+export const tick = (ship:IShip, planets:ICelestialBody[], deltaVs:IDeltaV[], timer:ITimer, targetId: string):{
+    newShip: IShip,
+    newStatus: Status,
+    finalTime: number;
+} => {
         let position = {...ship.position};
         let velocity = {...ship.velocity};
         const dT = timer.dT;
 
+        const target = planets.filter(p => p.id === targetId)[0];
+
+        let newStatus:Status = "playing";
+        let finalTime = timer.time;
         for(let i=0; i<Math.max(1, timer.steps); i++) {
             const time = timer.time + i * dT;
+            finalTime = time;
 
             // Update the position and velocity via Runge Kutta integration
             const [p, v] = rk4(position, velocity, planets, time, dT);
@@ -57,8 +66,22 @@ export const tick = (ship:IShip, planets:ICelestialBody[], deltaVs:IDeltaV[], ti
                 velocity.x += deltaV.deltaV * Math.cos(deltaV.angle) * 1000;
                 velocity.y += deltaV.deltaV * Math.sin(deltaV.angle) * 1000;
             }
+
+            // Calculate planet distance to determine if a crash or win occurred
+            if(getDistance(ship, target, time) < 0.2 * target.attributes.radius) {
+                // Player won!
+                newStatus = "won";
+            } else {
+                // Otherwise, check for collisions with any other planet
+                planets.forEach(p => {
+                    if(getDistance(ship, p, time) < 0) {
+                        newStatus = "dead";
+                    }
+                })
+            }
+            if(newStatus !== "playing") {break;}
         }
 
         // Update ship with new position and velocity
-        return {...ship, position, velocity};
+        return {newShip: {...ship, position, velocity}, newStatus, finalTime: finalTime + dT};
 }

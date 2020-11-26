@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { zoomSpeed } from '../../util/constants';
-import { getPosition } from '../../util/orbit';
+import { getDistance, getPosition } from '../../util/orbit';
 import { IVector } from '../../util/sim';
+import { lengthDisplay } from '../../util/util';
 import { Vector } from '../../util/vector';
 import { Planet } from '../Planet';
 import { Ship } from '../Ship';
 import { ViewportProps } from "./Viewport.d";
 import './Viewport.less';
-import { lengthDisplay } from '../../util/util';
 
 const zoomMul = 0.000000001;
 
@@ -66,9 +66,9 @@ export const ViewportComponent = (props:ViewportProps) => {
             const planetPos = getPosition(planet, props.time);
             const selectedPlanetCenter = Vector.mul(zoomMul, planetPos);
             setCenter(selectedPlanetCenter);
-            setDistance(Vector.len(Vector.sub(planetPos, props.ship.position)) - planet.attributes.radius);
+            setDistance(getDistance(props.ship, planet, props.time));
         }
-    }, [props.initialSelectedPlanetId, selectedPlanet, props.planets, props.ship.position, props.time]);
+    }, [props.initialSelectedPlanetId, selectedPlanet, props.planets, props.ship.position, props.ship, props.time]);
 
     const initialCenter = React.useRef(props.center);
     React.useEffect(() => {

@@ -1,4 +1,4 @@
-import { G, aEarth } from "./constants";
+import { aEarth, G } from "./constants";
 
 export const sci = (num:number, exp:number):number => num * Math.pow(10, exp);
 export const vSphere = (r:number):number => 4/3 * Math.PI * r * r * r;
