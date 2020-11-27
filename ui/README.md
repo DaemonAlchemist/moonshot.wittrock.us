@@ -32,3 +32,8 @@ Backend
         - .../moonshot/{levelId}/{scoreId} [GET]
     - Setup API for high score validation
         - Lambda function to run sim and validate results, and return an encrypted validation code
+
+Dev Notes
+=========
+Need to link util directories between apps in order for the backend to work
+/backend/src> mklink /J util "../../ui/src/util"

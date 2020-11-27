@@ -4,7 +4,7 @@ import { dT } from '../../util/constants';
 import { deltaV, game, planet, ship, timer } from '../../util/redux';
 import { resetLevel } from '../../util/resetLevel';
 import { IShip } from '../../util/sim';
-import { tick } from '../Ship/Ship.helpers';
+import { tick } from '../../util/tick';
 import { GameComponent } from './Game.component';
 import { GameProps, IGameDispatchProps, IGameProps, IGameStateProps } from "./Game.d";
 

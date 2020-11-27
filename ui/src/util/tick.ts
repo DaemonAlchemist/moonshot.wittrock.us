@@ -1,7 +1,7 @@
-import { IShip, ICelestialBody, IDeltaV, IVector, ITimer, Status } from "../../util/sim";
-import { getPosition, getDistance } from "../../util/orbit";
-import { G } from "../../util/constants";
-import { Vector } from "../../util/vector";
+import { IShip, ICelestialBody, IDeltaV, IVector, ITimer, Status } from "./sim";
+import { getPosition, getDistance } from "./orbit";
+import { G } from "./constants";
+import { Vector } from "./vector";
 
 const gravityForce = (position:IVector, planets:ICelestialBody[], t:number) => {
     return planets.reduce((totalForce:IVector, p:ICelestialBody):IVector => {
