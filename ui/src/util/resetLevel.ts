@@ -1,5 +1,4 @@
-import random from 'random';
-import seedrandom from 'seedrandom';
+import {random, seedrandom} from "../compat";
 import { ViewableCelestialObject, IVector, ISatellite } from "./sim";
 import { getPosition, period } from './orbit';
 import { rSun, dGasGiant, rJupiter, rEarth, dRock, aEarth } from './constants';
@@ -38,11 +37,11 @@ const getNewPlanet = (sun:ViewableCelestialObject, i:number):ViewableCelestialOb
         const moonId = `Planet ${i + 1}, Moon ${j + 1}`;
         const moonRadius = random.float(0.01, 0.3) * radius;
         const moonMass = random.float(0.8, 1.2) * getMass(moonRadius, dRock);
-        const a = p.attributes.radius + sci(1, 7) * (i + 1) * random.float(0.8, 1.2);
+        const moonA = p.attributes.radius + sci(2, 8) * (j + 1) * random.float(0.8, 1.2);
         const m:ViewableCelestialObject = {
             id: moonId,
             attributes: {mass: moonMass, radius: moonRadius, name: moonId},
-            orbit: {parent: p, e: random.float(0, 0.9), a, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
+            orbit: {parent: p, e: random.float(0, 0.9), a: moonA, w: random.float(0, 6.28), v0: random.float(0, 6.28)},
             view: {minViewSize: 1, borderColor: "66ff66", color: "aaffaa"}
         };
         (m as ISatellite).orbit.period = period(m as ISatellite);
@@ -106,5 +105,10 @@ export const resetLevel = (level:number) => {
         velocity: shipVelocity,
     };
     
-    return {planets, newShip, startId: start.id, targetId: target.id};
+    const levelData = {planets, newShip, startId: start.id, targetId: target.id};
+
+    console.log("New level:");
+    console.log(levelData);
+
+    return levelData;
 }

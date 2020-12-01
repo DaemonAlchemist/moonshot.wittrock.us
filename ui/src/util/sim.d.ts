@@ -45,7 +45,7 @@ export declare interface IPlanetDisplayAttributes {
 }
 
 export declare interface IOrbit {
-    parent: CelestialBody;
+    parent: ICelestialBody;
     e: number;
     a: number;
     w: number;

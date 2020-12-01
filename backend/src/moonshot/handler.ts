@@ -3,7 +3,9 @@ import { arg, pipe, prop } from 'ts-functional';
 import { IEnv, IEvent, IPath } from '../../api';
 import { get, post, withResponse } from '../../wrappers';
 import { db } from "../dynamodb/serverless-client";
+import { resetLevel } from '../util/resetLevel';
 import { highScoresTable } from './tables';
+import { tick } from '../util/tick';
 
 const handler = (resolve, reject) => (err, response) => {
   if(err) {
@@ -67,8 +69,19 @@ export const postHighScore = post<any>(async (body:any, path:IPath, env:IEnv, ev
     }
   })
 );
+
 export const postValidate = post<any>(async (body:any, path:IPath, env:IEnv, event:IEvent<any>) =>
   // TODO: Run simulation and return a salted validation hash if the solution is valid
+  new Promise((resolve, reject) => {
+    const data:any = JSON.parse(body);
+    const level:number = data.level;
+    const levelData = resetLevel(level);
+    const start = Date.now();
+    const newShip = tick(levelData.newShip, levelData.planets, [], {time: 0, dT: 100, steps: data.steps}, levelData.targetId);
+    const end = Date.now();
+    const time = end - start;
+    resolve({time, newShip});
+  })
 );
 
 export const postInit = post<any>(async (body:any, path:IPath, env:IEnv, event:IEvent<any>) =>

@@ -1,7 +1,7 @@
 import { CloseCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { faBackward, faFastBackward, faForward, faMoon, faPause, faPlay, faRocket, faStepBackward, faStepForward } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
-import { Button, InputNumber, Layout, Slider, Table } from 'antd';
+import { Button, InputNumber, Layout, Slider, Table, Modal } from 'antd';
 import * as React from 'react';
 import { dT, tickInterval, zoomSpeed } from "../../util/constants";
 import { IDeltaV } from "../../util/sim";
@@ -75,7 +75,7 @@ export const GameComponent = (props:GameProps) => {
             <hr />
 
             <h1>Delta Vs</h1>
-            <Table dataSource={props.deltaVs} rowKey="id" pagination={false} size="small" style={{margin: "16px"}}>
+            <Table dataSource={props.deltaVs} rowKey="id" pagination={false} size="small" style={{margin: "16px", maxHeight: "256px", overflow: "scroll"}}>
                 <Table.Column dataIndex="deltaV" title="Delta-V" render={deltaVInput} width="75px"/>
                 <Table.Column dataIndex="time" title="Time" render={timeInput} width="75px" />
                 <Table.Column dataIndex="angle" title="Angle" render={angleInput} />
@@ -89,6 +89,12 @@ export const GameComponent = (props:GameProps) => {
             <h1>High Scores for Level {level}</h1>
         </Layout.Sider>
         <Layout.Content className="viewports">
+            <Modal visible={props.game.status === "dead"} title="Game Over!" footer={null} onCancel={reset}>
+                You crashed into a planet!
+            </Modal>
+            <Modal visible={props.game.status === "won"} title="You Win!" footer={null} onCancel={reset}>
+                You reached the target planet! Congrats.
+            </Modal>
             <Viewport
                 name="Start"
                 className="start-viewport inset-viewport"

@@ -10,6 +10,9 @@
     "debug": "^4.1.1",
     "js-base64": "^2.5.1",
     "mysql-activerecord": "^0.8.6",
+    "random": "^2.2.0",
+    "seedrandom": "^3.0.5",
+    "the-reducer": "^2.4.0",
     "ts-functional": "^1.7.0",
     "utf8": "^3.0.0"
   },
