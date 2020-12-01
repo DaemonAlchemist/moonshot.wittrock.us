@@ -2,6 +2,8 @@ MoonShot!
 =========
 See how much of a rocket scientist you are.  Get your rocket to the target planet with the lowest delta-V cost.
 
+Live game:  https://moonshot.wittrock.us/index.html
+
 MoonShot ToDo
 =============
 Update game logic
