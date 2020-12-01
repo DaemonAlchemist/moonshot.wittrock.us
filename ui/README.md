@@ -1,7 +1,10 @@
+MoonShot!
+=========
+See how much of a rocket scientist you are.  Get your rocket to the target planet with the lowest delta-V cost.
+
 MoonShot ToDo
 =============
 Update game logic
-    - Crash handling:  If rocket is closer to a non-target planet than it's radius, crash and end game
     - Win handling:  If rocket is closer to target planet than the target orbit (1.2 radius)
         - Calculate delta-V needed to enter target orbit
         - Add up total delta-V values (user-defined and final delta-V) to get score
@@ -17,11 +20,6 @@ Extra UX
     - When not near a burn, face rocket in direction of travel
     - Add ship travel dots
         - when viewport is tracking a planet, dot locations should be relative to the planet's location at that time.
-
-Bugs
-    - Make sure orbits are reasonable
-    - w orbit parameter does not appear to be working (scale?)
-    - Burn duration needs tweaking
 
 Backend
     - Setup dynamoDB tables to record high scores
